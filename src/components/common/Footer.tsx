@@ -1,6 +1,10 @@
-const Footer = () => {
-    return (
-        <>
-        </>
-    );
+import React from 'react';
+
+const Footer: React.FC = () => {
+  return (
+    <>
+    </>
+  );
 };
+
+export default Footer;

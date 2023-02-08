@@ -1,23 +1,25 @@
-import { useEffect, useState } from "react";
-import { GoogleMapUtils } from "../assets/utils/GoogleMapUtils";
-import { MapInit } from "../components/map/MapInit";
+import React, { useEffect, useState } from 'react';
+import { GoogleMapUtils } from '../assets/utils/GoogleMapUtils';
+import { MapInit } from '../components/map/MapInit';
 
-const MapPage = () => {
-    
-    const [loadScripts, setLoadScripts] = useState(false);
+const MapPage: React.FC = () => {
 
-    useEffect(() => {
-        const googleMapScripts = GoogleMapUtils();
-        googleMapScripts.addEventListener('load', function() {
-            setLoadScripts(true);
-        })
-    }, [])
+  const [loadScripts, setLoadScripts] = useState(false);
 
-    return (
-        <>
-            {loadScripts && (
-                <MapInit />
-            )}
-        </>
-    );
+  useEffect(() => {
+    const googleMapScripts = GoogleMapUtils();
+    googleMapScripts.addEventListener('load', function () {
+      setLoadScripts(true);
+    })
+  }, [])
+
+  return (
+    <>
+      {loadScripts && (
+        <MapInit />
+      )}
+    </>
+  );
 };
+
+export default MapPage;
