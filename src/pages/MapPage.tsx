@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleMapUtils } from '../assets/utils/GoogleMapUtils';
+import { GoogleMapUtils } from '../lib/GoogleMapUtils';
 import { MapInit } from '../components/map/MapInit';
 
 const MapPage: React.FC = () => {
