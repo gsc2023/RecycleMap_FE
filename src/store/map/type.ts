@@ -2,6 +2,8 @@
 export interface UseGeoLoc {
   use: true;
   nowLoc: google.maps.LatLngLiteral;
+  marker: google.maps.Marker;
+  eqCenter: boolean;
 }
 export interface NUserGeoLoc {
   use: false;
@@ -16,6 +18,8 @@ export type EventPayload = {
   exVoid: void;
   nowLoc: google.maps.LatLngLiteral;
   useGeo: boolean;
+  zoom: number;
+  eqCenter: boolean;
 };
 
 export type EvtHandler<K extends keyof EventPayload> =
