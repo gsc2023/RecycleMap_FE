@@ -1,18 +1,9 @@
+import { EventPayload, EvtHandler, GeoLoc } from './type';
 
 const LAT_LNG_AJOU = {
   lat: 37.5639635,
   lng: 126.891867,
 };
-
-interface UseGeoLoc {
-  use: true;
-  nowLoc: google.maps.LatLngLiteral;
-}
-interface NUserGeoLoc {
-  use: false;
-}
-
-type GeoLoc = UseGeoLoc | NUserGeoLoc;
 
 /**
  * google map controller
@@ -23,6 +14,10 @@ type GeoLoc = UseGeoLoc | NUserGeoLoc;
  */
 class MapManager {
   static instance: MapManager | null = null;
+
+  private _eventMapper: Partial<{
+    [K in keyof EventPayload]: EvtHandler<K>[];
+  }> = {};
 
   apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   mapCenter: google.maps.LatLngLiteral = { ...LAT_LNG_AJOU };
@@ -54,6 +49,7 @@ class MapManager {
       );
       if (pos === null) {
         this.geoLocState = { use: false };
+        this.emit('useGeo', false);
         return;
       }
       navigator.geolocation.watchPosition(
@@ -65,12 +61,11 @@ class MapManager {
               lng: pos.coords.longitude,
             },
           };
-          // call event
-          // user location update
+          this.emit('nowLoc', this.geoLocState.nowLoc);
         },
         () => {
           this.geoLocState = { use: false };
-          // call event
+          this.emit('useGeo', false);
         },
       );
       
@@ -78,6 +73,29 @@ class MapManager {
 
       resolve();
     });
+  }
+
+  addEventListener<K extends keyof EventPayload>(evtStr: K, handler: EvtHandler<K>) {
+    if (!this._eventMapper[evtStr]) {
+      this._eventMapper[evtStr] = [];
+    }
+    this._eventMapper[evtStr]!.push(handler);
+  }
+  
+  removeEventListener<K extends keyof EventPayload>(evtStr: K, handler: EvtHandler<K>) {
+    const lst = this._eventMapper[evtStr];
+    if (!lst) return;
+    const idx = lst.findIndex((h) => h === handler);
+    if (idx !== -1) {
+      lst.splice(idx, 1);
+    }
+  }
+
+  private emit<K extends keyof EventPayload>(evtStr: K, arg: EventPayload[K]) {
+    const lst = this._eventMapper[evtStr];
+    if (lst) {
+      lst.forEach((handler) => handler(arg));
+    }
   }
 }
 
