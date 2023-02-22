@@ -45,9 +45,14 @@ class MapManager {
     };
     this.loadProm = new Promise(async (resolve) => {
       const mapLoader = new GoogleMap();
+      const divEl = document.createElement('div');
+      divEl.id = '__google_map';
+      divEl.style.width = '100%';
+      divEl.style.height = '100%';
+      document.body.append(divEl);
       const map = await mapLoader.initMap({
         apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-        divId: 'google_map',
+        divId: '__google_map',
         mapOptions: {
           center: { ...LAT_LNG_AJOU },
           zoom: 15,
@@ -64,6 +69,7 @@ class MapManager {
           version: 'weekly',
           language: 'ko',
           region: 'ko',
+          libraries: ['places']
         },
       });
       this.map = map;
@@ -189,5 +195,8 @@ class MapManager {
     }
   }
 }
+
+// eslint-disable-next-line
+(window as any).MapManager = MapManager;
 
 export default MapManager;

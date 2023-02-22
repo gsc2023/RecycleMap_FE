@@ -16,10 +16,6 @@ const style = createStyle({
     alignItems: 'center',
     display: 'flex',
   },
-  mapTop: {
-    width: '100%',
-    height: '100%',
-  },
   selectTop: {
     position: 'fixed',
     right: '1.5%',
@@ -81,7 +77,6 @@ const iconLst: IconsEl[] = [{
 const MapPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
-  const isInit = useRef(false);
 
   const [sltd, setSltd] = useState<number[]>([]);
   const [zoom, setZoom] = useState(0);
@@ -89,29 +84,39 @@ const MapPage: React.FC = () => {
 
   const mapInstance = MapManager.getInstance();
 
-  const handleChangeZoom = useCallback((v: number) => {
+  const handleChangeZoom = useCallback((v: number, adjMap = false) => {
     setZoom(v);
-    mapInstance.map.setZoom(v);
+    if (adjMap) {
+      mapInstance.map.setZoom(v);
+    }
   }, [mapInstance.map]);
 
   useEffect(() => {
     // TODO how to remove event listener
-    if (ref.current && isInit.current === false) {
-      isInit.current = true;
+    if (ref.current) {
       mapInstance.loadProm.then(() => {
-        mapInstance.addEventListener('zoom', (dt) => setZoom(dt));
+        ref.current?.prepend(mapInstance.map.getDiv());
+        mapInstance.addEventListener('zoom', handleChangeZoom);
+        mapInstance.addEventListener('eqCenter', forceUpdate);
         setZoom(mapInstance.map.getZoom());
         setLoading(false);
-        mapInstance.addEventListener('eqCenter', () => {
-          forceUpdate();
-        });
       });
     }
-  }, [ref, mapInstance, forceUpdate]);
+    return () => {
+      mapInstance.loadProm.then(() => {
+        mapInstance.removeEventListener('zoom', handleChangeZoom);
+        mapInstance.removeEventListener('eqCenter', forceUpdate);
+      });
+    };
+  }, [
+    ref,
+    mapInstance,
+    forceUpdate,
+    handleChangeZoom,
+  ]);
 
   return (
-    <Box sx={style.sx.top}>
-      <Box ref={ref} sx={style.sx.mapTop} id="google_map" />
+    <Box sx={style.sx.top} ref={ref}>
       <ToggleButtonGroup
         sx={style.sx.selectTop}
         orientation="vertical"
@@ -120,7 +125,9 @@ const MapPage: React.FC = () => {
       >
         {iconLst.map(({ icon, text, id }) => (
           <ToggleButton sx={style.sx.selectBox} value={id} key={id}>
-            {icon}
+            <Box sx={{ color: sltd.includes(id) ? 'primary.main' : 'primary.dark' }}>
+              {icon}
+            </Box>
             <Box sx={{ my: 0.5 }} />
             {text}
           </ToggleButton>
@@ -130,7 +137,7 @@ const MapPage: React.FC = () => {
         <Paper sx={{ borderRadius: '15px', mr: 1.5 }}>
           <IconButton onClick={() => mapInstance.updateGeoLoc()}>
             {mapInstance.geoLocState.use && mapInstance.geoLocState.eqCenter ?
-              <GpsFixedIcon sx={{ fontSize: 32 }} /> :
+              <GpsFixedIcon sx={{ fontSize: 32, color: 'primary.main' }} /> :
               <GpsNotFixedIcon sx={{ fontSize: 32 }} />
             }
           </IconButton>
