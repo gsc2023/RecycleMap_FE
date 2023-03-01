@@ -12,10 +12,6 @@ export interface NUserGeoLoc {
 export type GeoLoc = UseGeoLoc | NUserGeoLoc;
 
 export type EventPayload = {
-  example: {
-    example: number;
-  },
-  exVoid: void;
   nowLoc: google.maps.LatLngLiteral;
   useGeo: boolean;
   zoom: number;

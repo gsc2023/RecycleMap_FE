@@ -21,13 +21,17 @@ class MapManager {
   }> = {};
 
   apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-  mapCenter: google.maps.LatLngLiteral = { ...LAT_LNG_AJOU };
+  queriedCoord: google.maps.LatLngLiteral = {
+    lat: -1,
+    lng: -1,
+  };
 
   geoLocState: GeoLoc;
   loadProm: Promise<void>;
 
   map!: google.maps.Map;
   watcher: number | null = null;
+  searchMarker!: google.maps.Marker;
 
   public static getInstance() {
     return this.instance || (this.instance = new MapManager());
@@ -92,9 +96,54 @@ class MapManager {
           this.emit('eqCenter', false);
         }
       });
+      map.addListener('center_changed', () => {
+        const { lat, lng } = map.getCenter().toJSON();
+        if (Math.abs(this.queriedCoord.lat - lat) + Math.abs(this.queriedCoord.lng - lng) >= 0.003) {
+          console.log(lat, lng);
+          
+          // call API
+          this.queriedCoord = { lat, lng };
+        }
+      });
+      this.searchMarker = new google.maps.Marker({
+        anchorPoint: new google.maps.Point(0, -29),
+        map,
+      });
       await this.updateGeoLoc();
       resolve();
     });
+  }
+
+  attachInput(input: HTMLInputElement) {
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+      fields: ['formatted_address', 'geometry', 'name'],
+      strictBounds: false,
+      types: ['establishment'],
+    });
+    autocomplete.bindTo('bounds', this.map);
+    this.searchMarker.setVisible(false);
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      if (!place.geometry || !place.geometry.location) {
+        return;
+      }
+      if (place.geometry.viewport) {
+        this.map.fitBounds(place.geometry.viewport);
+      } else {
+        this.map.setCenter(place.geometry.location);
+        this.map.setZoom(17);
+      }
+      this.searchMarker.setPosition(place.geometry.location);
+      this.searchMarker.setVisible(true);
+      if (this.geoLocState.use && this.geoLocState.eqCenter) {
+        this.geoLocState.eqCenter = false;
+        this.emit('eqCenter', false);
+      }
+    });
+  }
+
+  clearSearchLoc() {
+    this.searchMarker.setVisible(false);
   }
 
   async updateGeoLoc() {

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Box, Typography, ToggleButtonGroup, ToggleButton, Slider, Paper } from '@mui/material';
+import { Box, Typography, ToggleButtonGroup, ToggleButton, Slider, Paper, TextField } from '@mui/material';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import GpsNotFixedIcon from '@mui/icons-material/GpsNotFixed';
 import IconButton from '@mui/material/IconButton';
@@ -7,6 +7,8 @@ import useForceUpdate from '../lib/useForceUpdate';
 import { createStyle } from '../lib/styleHelper';
 import MapManager from '../store/map';
 import { BatteryIcon, BeautyShop, ClothIcon, RecycleShop } from '../constants/svgs';
+import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 
 const style = createStyle({
   top: {
@@ -57,19 +59,19 @@ interface IconsEl {
 }
 
 const iconLst: IconsEl[] = [{
-  icon: <ClothIcon />,
+  icon: <ClothIcon style={{ width: '100%', height: '80%' }} />,
   text: (<Typography>의류 수거함</Typography>),
   id: 1,
 }, {
-  icon: <BatteryIcon />,
+  icon: <BatteryIcon style={{ width: '100%', height: '80%' }} />,
   text: <Typography>폐건전지<br />폐형광등</Typography>,
   id: 2,
 }, {
-  icon: <BeautyShop />,
+  icon: <BeautyShop style={{ width: '100%', height: '80%' }} />,
   text: <Typography>아름다운<br />가게</Typography>,
   id: 3,
 }, {
-  icon: <RecycleShop />,
+  icon: <RecycleShop style={{ width: '100%', height: '80%' }} />,
   text: <Typography>재활용품<br />판매센터</Typography>,
   id: 4,
 }];
@@ -77,7 +79,8 @@ const iconLst: IconsEl[] = [{
 const MapPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
-
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [text, setText] = useState('');
   const [sltd, setSltd] = useState<number[]>([]);
   const [zoom, setZoom] = useState(0);
   const forceUpdate = useForceUpdate();
@@ -115,8 +118,43 @@ const MapPage: React.FC = () => {
     handleChangeZoom,
   ]);
 
+  useEffect(() => {
+    if (inputRef.current) {
+      const inputCurrent = inputRef.current;
+      mapInstance.loadProm.then(() => {
+        mapInstance.attachInput(inputCurrent);
+      });
+    }
+  }, [inputRef, mapInstance]);
+
+  const handleClearAutocomplete = useCallback(() => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+    mapInstance.clearSearchLoc();
+  }, [mapInstance]);
+
   return (
     <Box sx={style.sx.top} ref={ref}>
+      <TextField
+        inputRef={inputRef}
+        sx={{
+          position: 'fixed',
+          left: '5%',
+          top: '5%',
+          background: '#fff',
+          width: '30%',
+        }}
+        size="small"
+        InputProps={{
+          startAdornment: <SearchIcon />,
+          endAdornment: (
+            <IconButton onClick={handleClearAutocomplete}>
+              <CloseIcon />
+            </IconButton>
+          )
+        }}
+      />
       <ToggleButtonGroup
         sx={style.sx.selectTop}
         orientation="vertical"
@@ -125,7 +163,14 @@ const MapPage: React.FC = () => {
       >
         {iconLst.map(({ icon, text, id }) => (
           <ToggleButton sx={style.sx.selectBox} value={id} key={id}>
-            <Box sx={{ color: sltd.includes(id) ? 'primary.main' : 'primary.dark' }}>
+            <Box
+              sx={{
+                color: sltd.includes(id) ? 'primary.main' : 'primary.dark',
+                width: '100%',
+                height: '50%',
+                display: 'flex',
+                alignItems: 'center',
+              }}>
               {icon}
             </Box>
             <Box sx={{ my: 0.5 }} />
