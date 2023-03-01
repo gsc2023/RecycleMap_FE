@@ -1,5 +1,13 @@
 import { GoogleMap } from '@googlemaps/map-loader';
-import { EventPayload, EvtHandler, GeoLoc } from './type';
+import {
+  EventPayload,
+  EvtHandler,
+  GeoLoc,
+  PlaceLst,
+  PlaceType,
+} from './type';
+
+const markerURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAvCAYAAAAb1BGUAAADdElEQVRYhbWYv2/aQBzFXyxXugEjIwUJQ5DMkMrulFSqlXQChSVTA39AUdeqDN3yY25+TB0ydA3t0C1kSwZaRR1KxJKoQ42aIZGsFEtUSgpItRQkOlBTTMydDeFtiLv73J3P7/vOU51OpwOGGm0LpbqOUr0KvWXip3Vzp40mylCECLLSPNRAhDUkAGCKBm+0LWyeH6JUr6LZtjwNCABRIiKfSCIrzY8GLxhl7F4c+4K6TWJHzUALyd7hq3oRxdrZyNBBbakrrrvATRoMAGv6AfZrp3T4JMC0CfTgBaM8MbCtzfMjXPW9KRzQPdW7F8e+BlICEWiiDIEnnvs02xbe/Djs/ea7Mzr0dKrtVygdVhHsg15ZN9gzynhvnDDH+PSrisr1JbSQjKnft386T75sMTtlpDmszy47oIPSWyZWvxdRbZnMsbbVDLhSXfcE3lYzVDAAqIEIPjx+gSgRqe2KtTM02ha4Ur1KbRglItZnl5kTtBXkCXbUDLNdqa6D0xlblE8kmSselBaSoYnurmZLb5ng3IpEv9Jh1RfYVkaao/5fbZp3Ha5fUSL6XrWtGRJitqHCZxgHhybhAXvSVDjrPNDUvGX7BhXebFsOO/QjvVVjwxVG6nCrRl60x3A7LSSDUwU6vGCc+F59wSi7Rq1+qQEJXHqa/io12xZefvuIhsdEo7dMbJ4fUdsIPEE6rIBLhxWmHVZbJp5V3qFyfUltVzDKWKm8Y04wHVYA/ItR+7VTrOkHzE4AsDStIB1WoAoSYkREtWlCb9WwZ5wwt9rW56evESPi/wyX+vrWc+dx9CqRRD6RAtD3quUTyYmDBZ4gF1/s/e7Bs9I8sxiMq1x8wWHXDpOxt2MS6qYg5/gOuBaSsTStTATu9ljv2OvGQ+/BwauUQMTbpSFGRDyPL9wrfGNIEnItLPlEylckpkkT5aF3NVd4kCfI3dPqtx8Nz3NDS2o+kWLaLksZaQ4xyhjUej6O8Qg8YaZeKjwrzYNV74dp0FB8w4HhJ5WmKBEdNjoy3EsGH5TXrM+EA/QTO6goEZnfYnzBY0RkXgJsebkq+YIDwPrsMtN4aIYyFtyL8fh5PL7gAJCLLw41HpahjA0P8sTVeASejJQFfMGBrvEMrj4XX/C96pHggPNED+ayicO1kNyr+V4+lwwT9cMvS1fWzUjbbesvteQrIZ42FaYAAAAASUVORK5CYII=';
 
 const LAT_LNG_AJOU = {
   lat: 37.5639635,
@@ -10,8 +18,6 @@ const LAT_LNG_AJOU = {
  * google map controller
  * 
  * singleton pattern
- * 
- * div id must be "google_map"
  */
 class MapManager {
   static instance: MapManager | null = null;
@@ -32,6 +38,30 @@ class MapManager {
   map!: google.maps.Map;
   watcher: number | null = null;
   searchMarker!: google.maps.Marker;
+
+  placeLst: PlaceLst = {
+    cloth: [{
+      id: 'temp1',
+      Content: 'temp1',
+      Latitude: 37.28009201520448,
+      Longitude: 127.049926014682,
+      Name: 'temp1',
+      LocationType: 1,
+    }, {
+      id: 'temp2',
+      Content: 'temp2',
+      Latitude: 37.280506047074994,
+      Longitude: 127.0503390748703,
+      Name: 'temp2',
+      LocationType: 1,
+    }],
+    battery: [],
+    shop: [],
+    recycle: [],
+  };
+  placeFilter: PlaceType[] = ['cloth'];
+  markers: google.maps.Marker[] = [];
+  clickedMarker: string | null = null;
 
   public static getInstance() {
     return this.instance || (this.instance = new MapManager());
@@ -103,6 +133,7 @@ class MapManager {
           
           // call API
           this.queriedCoord = { lat, lng };
+          this.updatePlaceMarker();
         }
       });
       this.searchMarker = new google.maps.Marker({
@@ -219,6 +250,39 @@ class MapManager {
         }
       },
     );
+  }
+
+  updatePlaceMarker() {
+    this.markers.forEach((marker) => marker.setMap(null));
+    this.markers = [];
+    this.placeFilter.forEach((pt) => {
+      this.placeLst[pt].forEach((place) => {
+        const marker = new google.maps.Marker({
+          map: this.map,
+          position: {
+            lat: place.Latitude,
+            lng: place.Longitude,
+          },
+          title: place.Name,
+        });
+        marker.set('id', place.id);
+        marker.addListener('click', () => {
+          if (this.clickedMarker && this.clickedMarker === place.id) {
+            this.clickedMarker = null;
+            this.emit('clickMarker', null);
+          } else {
+            this.clickedMarker = place.id;
+            this.emit('clickMarker', place);
+          }
+        });
+        this.markers.push(marker);
+      });
+    });
+  }
+
+  closePlaceMarker() {
+    this.clickedMarker = null;
+    this.emit('clickMarker', null);
   }
 
   addEventListener<K extends keyof EventPayload>(evtStr: K, handler: EvtHandler<K>) {

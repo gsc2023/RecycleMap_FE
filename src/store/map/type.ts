@@ -16,9 +16,25 @@ export type EventPayload = {
   useGeo: boolean;
   zoom: number;
   eqCenter: boolean;
+  clickMarker: PlaceInfo | null;
 };
 
 export type EvtHandler<K extends keyof EventPayload> =
   EventPayload[K] extends void ?
     () => unknown :
     (ev: EventPayload[K]) => unknown;
+
+
+
+export type PlaceType = 'cloth' | 'battery' | 'shop' | 'recycle';
+
+export interface PlaceInfo {
+  id: string;
+  Latitude: number;
+  Longitude: number;
+  Content: string;
+  Name: string;
+  LocationType: 1 | 2 | 3 | 4;
+}
+
+export type PlaceLst = { [key in PlaceType]: PlaceInfo[] };

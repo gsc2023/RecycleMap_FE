@@ -9,6 +9,7 @@ import MapManager from '../store/map';
 import { BatteryIcon, BeautyShop, ClothIcon, RecycleShop } from '../constants/svgs';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import MapDialog from '../components/map/Dialog';
 
 const style = createStyle({
   top: {
@@ -80,7 +81,6 @@ const MapPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [text, setText] = useState('');
   const [sltd, setSltd] = useState<number[]>([]);
   const [zoom, setZoom] = useState(0);
   const forceUpdate = useForceUpdate();
@@ -209,8 +209,11 @@ const MapPage: React.FC = () => {
             bottom: 0,
             background: '#fff',
           }}
-        >Loading...</Box>
+        >
+          Loading...
+        </Box>
       )}
+      <MapDialog />
     </Box>
   );
 }
