@@ -35,6 +35,7 @@ export interface PlaceInfo {
   Content: string;
   Name: string;
   LocationType: 1 | 2 | 3 | 4;
+  placeImg?: string;
 }
 
 export type PlaceLst = { [key in PlaceType]: PlaceInfo[] };

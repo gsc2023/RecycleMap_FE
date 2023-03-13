@@ -7,7 +7,7 @@ import {
   PlaceType,
 } from './type';
 
-const markerURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAvCAYAAAAb1BGUAAADdElEQVRYhbWYv2/aQBzFXyxXugEjIwUJQ5DMkMrulFSqlXQChSVTA39AUdeqDN3yY25+TB0ydA3t0C1kSwZaRR1KxJKoQ42aIZGsFEtUSgpItRQkOlBTTMydDeFtiLv73J3P7/vOU51OpwOGGm0LpbqOUr0KvWXip3Vzp40mylCECLLSPNRAhDUkAGCKBm+0LWyeH6JUr6LZtjwNCABRIiKfSCIrzY8GLxhl7F4c+4K6TWJHzUALyd7hq3oRxdrZyNBBbakrrrvATRoMAGv6AfZrp3T4JMC0CfTgBaM8MbCtzfMjXPW9KRzQPdW7F8e+BlICEWiiDIEnnvs02xbe/Djs/ea7Mzr0dKrtVygdVhHsg15ZN9gzynhvnDDH+PSrisr1JbSQjKnft386T75sMTtlpDmszy47oIPSWyZWvxdRbZnMsbbVDLhSXfcE3lYzVDAAqIEIPjx+gSgRqe2KtTM02ha4Ur1KbRglItZnl5kTtBXkCXbUDLNdqa6D0xlblE8kmSselBaSoYnurmZLb5ng3IpEv9Jh1RfYVkaao/5fbZp3Ha5fUSL6XrWtGRJitqHCZxgHhybhAXvSVDjrPNDUvGX7BhXebFsOO/QjvVVjwxVG6nCrRl60x3A7LSSDUwU6vGCc+F59wSi7Rq1+qQEJXHqa/io12xZefvuIhsdEo7dMbJ4fUdsIPEE6rIBLhxWmHVZbJp5V3qFyfUltVzDKWKm8Y04wHVYA/ItR+7VTrOkHzE4AsDStIB1WoAoSYkREtWlCb9WwZ5wwt9rW56evESPi/wyX+vrWc+dx9CqRRD6RAtD3quUTyYmDBZ4gF1/s/e7Bs9I8sxiMq1x8wWHXDpOxt2MS6qYg5/gOuBaSsTStTATu9ljv2OvGQ+/BwauUQMTbpSFGRDyPL9wrfGNIEnItLPlEylckpkkT5aF3NVd4kCfI3dPqtx8Nz3NDS2o+kWLaLksZaQ4xyhjUej6O8Qg8YaZeKjwrzYNV74dp0FB8w4HhJ5WmKBEdNjoy3EsGH5TXrM+EA/QTO6goEZnfYnzBY0RkXgJsebkq+YIDwPrsMtN4aIYyFtyL8fh5PL7gAJCLLw41HpahjA0P8sTVeASejJQFfMGBrvEMrj4XX/C96pHggPNED+ayicO1kNyr+V4+lwwT9cMvS1fWzUjbbesvteQrIZ42FaYAAAAASUVORK5CYII=';
+const placeType = ['', '의류 수거함', '폐건전지/현광등', '아름다운가게', '재활용품판매;'];
 
 const LAT_LNG_AJOU = {
   lat: 37.5639635,
@@ -36,6 +36,7 @@ class MapManager {
   loadProm: Promise<void>;
 
   map!: google.maps.Map;
+  infoWindow!: google.maps.InfoWindow;
   watcher: number | null = null;
   searchMarker!: google.maps.Marker;
 
@@ -68,6 +69,14 @@ class MapManager {
   }
 
   private constructor() {
+    window.clickPlace = (p) => {
+      this.clickedMarker = p;
+      const place = Object.values(this.placeLst).flat().find(i => i.id === p);
+      if (!place) {
+        throw Error('');
+      }
+      this.emit('clickMarker', place);
+    }
     if (typeof this.apiKey !== 'string' || this.apiKey === '') {
       throw Error('google api map key is not available');
     }
@@ -107,6 +116,7 @@ class MapManager {
         },
       });
       this.map = map;
+      this.infoWindow = new google.maps.InfoWindow();
       map.addListener('zoom_changed', () => {
         this.emit('zoom', map.getZoom());
         if (this.geoLocState.use && this.geoLocState.eqCenter) {
@@ -253,6 +263,10 @@ class MapManager {
   }
 
   updatePlaceMarker() {
+    if (this.clickedMarker) {
+      this.clickedMarker = null;
+      this.emit('clickMarker', null);
+    }
     this.markers.forEach((marker) => marker.setMap(null));
     this.markers = [];
     this.placeFilter.forEach((pt) => {
@@ -271,8 +285,22 @@ class MapManager {
             this.clickedMarker = null;
             this.emit('clickMarker', null);
           } else {
-            this.clickedMarker = place.id;
-            this.emit('clickMarker', place);
+            this.infoWindow.setContent(`
+<div style="padding: 5px 10px; cursor: pointer;" onclick="clickPlace('${place.id}')">
+  <div style="display: flex;">
+    <div style="margin-right: 10px; font-size: 16px; font-weight: bold;">
+      ${place.Content}
+    </div>
+    <div style="padding: 2px 10px; border-radius: 10px; background: #13BD7E; color: #fff;">
+      ${placeType[place.LocationType]}
+    </div>
+  </div>
+  <div style="margin-top: 5px;">
+    자세히 보기
+  </div>
+</div>
+            `);
+            this.infoWindow.open(this.map, marker);
           }
         });
         this.markers.push(marker);

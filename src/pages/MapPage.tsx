@@ -84,6 +84,7 @@ const MapPage: React.FC = () => {
   const [sltd, setSltd] = useState<number[]>([]);
   const [zoom, setZoom] = useState(0);
   const forceUpdate = useForceUpdate();
+  const [openDialog, setOpenDialog] = useState(false);
 
   const mapInstance = MapManager.getInstance();
 
