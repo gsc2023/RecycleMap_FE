@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 import Container from "@mui/material/Container";
 import Paper from '@mui/material/Paper';
@@ -9,7 +9,17 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { TextField } from '@mui/material';
 
-const Login: React.FC = () => {
+// interface Payload {
+//   Email?: String,
+//   EmailVerified?: Boolean,
+//   PhonNumber?: String,
+//   Password?: String,
+//   DisplayName?: String,
+//   PhotoURL?: String,
+//   Disabled?: Boolean
+// }
+
+const SignUpRenew: React.FC = () => {
 
   const navigate = useNavigate();
 
@@ -19,13 +29,17 @@ const Login: React.FC = () => {
 
     const userData = {
       Email: data.get('email'),
+      EmailVerified: true,
+      PhonNumber: "0000",
       Password: data.get('password'),
+      DisplayName: data.get('name'),
+      PhotoURL: "default",
+      Disabled: false,
     };
 
-    axios.post('/login', userData).then((response: AxiosResponse) => {
-      alert("로그인이 정상적으로 완료되었습니다.");
-      console.log(response.data);
-      navigate('/');
+    axios.post('/auth/signup', userData).then(() => {
+      alert("회원가입이 정상적으로 완료되었습니다.");
+      navigate('/auth/signin');
     })
     .catch(() => {
       console.log("Axios Error");
@@ -36,7 +50,7 @@ const Login: React.FC = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 }}}>
-        <Typography variant="h6" align="center">로그인</Typography>
+        <Typography variant="h6" align="center">회원가입</Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField 
             margin="normal"
@@ -59,6 +73,16 @@ const Login: React.FC = () => {
             autoComplete="password"
             autoFocus
           />
+          <TextField 
+            margin="normal"
+            required
+            fullWidth
+            id="nickname"
+            label="Nickname"
+            name="nickname"
+            autoComplete="nickname"
+            autoFocus
+          />
           <Button
             color="primary"
             type="submit"
@@ -66,13 +90,12 @@ const Login: React.FC = () => {
             variant="outlined"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Sign Up
           </Button>
         </Box>
-        <Box display="flex" justifyContent="center"><Button onClick={() => navigate('/auth/signup')}>회원가입하기</Button></Box>
       </Paper>
     </Container>
   );
 };
 
-export default Login;
+export default SignUpRenew;

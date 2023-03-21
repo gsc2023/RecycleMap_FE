@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Typography, ToggleButtonGroup, ToggleButton, Slider, Paper, TextField } from '@mui/material';
-import GpsFixedIcon from '@mui/icons-material/GpsFixed';
-import GpsNotFixedIcon from '@mui/icons-material/GpsNotFixed';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed'
+import GpsNotFixedIcon from '@mui/icons-material/GpsNotFixed'
+import SearchIcon from '@mui/icons-material/Search'
+import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton';
 import useForceUpdate from '../lib/useForceUpdate';
 import { createStyle } from '../lib/styleHelper';
 import MapManager from '../store/map';
 import { BatteryIcon, BeautyShop, ClothIcon, RecycleShop } from '../constants/svgs';
-import SearchIcon from '@mui/icons-material/Search';
-import CloseIcon from '@mui/icons-material/Close';
 import MapDialog from '../components/map/Dialog';
 import { PlaceType } from '../store/map/type';
 
