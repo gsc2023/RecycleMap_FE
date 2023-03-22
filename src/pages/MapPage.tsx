@@ -10,6 +10,7 @@ import { BatteryIcon, BeautyShop, ClothIcon, RecycleShop } from '../constants/sv
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import MapDialog from '../components/map/Dialog';
+import { PlaceType } from '../store/map/type';
 
 const style = createStyle({
   top: {
@@ -56,8 +57,17 @@ const style = createStyle({
 interface IconsEl {
   icon: JSX.Element;
   text: JSX.Element;
-  id: number;
+  id: 1|2|3|4;
 }
+
+const mapper: {
+  [K in (1|2|3|4)]: PlaceType;
+} = {
+  1: 'cloth',
+  2: 'battery',
+  3: 'shop',
+  4: 'recycle',
+};
 
 const iconLst: IconsEl[] = [{
   icon: <ClothIcon style={{ width: '100%', height: '80%' }} />,
@@ -81,7 +91,7 @@ const MapPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [sltd, setSltd] = useState<number[]>([]);
+  const [sltd, setSltd] = useState<(1|2|3|4)[]>([1]);
   const [zoom, setZoom] = useState(0);
   const forceUpdate = useForceUpdate();
   const [openDialog, setOpenDialog] = useState(false);
@@ -160,7 +170,10 @@ const MapPage: React.FC = () => {
         sx={style.sx.selectTop}
         orientation="vertical"
         value={sltd}
-        onChange={(_, newV) => setSltd(newV)}
+        onChange={(a, newV) => {
+          setSltd(newV);
+          mapInstance.changePlaceFilter((newV as (1|2|3|4)[]).map(i => mapper[i]));
+        }}
       >
         {iconLst.map(({ icon, text, id }) => (
           <ToggleButton sx={style.sx.selectBox} value={id} key={id}>

@@ -1,4 +1,5 @@
 import { GoogleMap } from '@googlemaps/map-loader';
+import axios from '../../lib/axios';
 import {
   EventPayload,
   EvtHandler,
@@ -41,25 +42,13 @@ class MapManager {
   searchMarker!: google.maps.Marker;
 
   placeLst: PlaceLst = {
-    cloth: [{
-      id: 'temp1',
-      Content: 'temp1',
-      Latitude: 37.28009201520448,
-      Longitude: 127.049926014682,
-      Name: 'temp1',
-      LocationType: 1,
-    }, {
-      id: 'temp2',
-      Content: 'temp2',
-      Latitude: 37.280506047074994,
-      Longitude: 127.0503390748703,
-      Name: 'temp2',
-      LocationType: 1,
-    }],
+    cloth: [],
     battery: [],
     shop: [],
     recycle: [],
   };
+  apiLock = false;
+  dragState = false;
   placeFilter: PlaceType[] = ['cloth'];
   markers: google.maps.Marker[] = [];
   clickedMarker: string | null = null;
@@ -112,7 +101,7 @@ class MapManager {
           version: 'weekly',
           language: 'ko',
           region: 'ko',
-          libraries: ['places']
+          libraries: ['places'],
         },
       });
       this.map = map;
@@ -131,19 +120,23 @@ class MapManager {
         }
       });
       map.addListener('dragstart', () => {
+        this.dragState = true;
         if (this.geoLocState.use && this.geoLocState.eqCenter) {
           this.geoLocState.eqCenter = false;
           this.emit('eqCenter', false);
         }
       });
+      map.addListener('dragend', () => {
+        this.dragState = false;
+        const { lat, lng } = map.getCenter().toJSON();
+        this.getPlaces(lat, lng);
+      });
       map.addListener('center_changed', () => {
         const { lat, lng } = map.getCenter().toJSON();
         if (Math.abs(this.queriedCoord.lat - lat) + Math.abs(this.queriedCoord.lng - lng) >= 0.003) {
-          console.log(lat, lng);
-          
-          // call API
-          this.queriedCoord = { lat, lng };
-          this.updatePlaceMarker();
+          if (this.dragState === false) {
+            this.getPlaces(lat, lng);
+          }
         }
       });
       this.searchMarker = new google.maps.Marker({
@@ -153,6 +146,41 @@ class MapManager {
       await this.updateGeoLoc();
       resolve();
     });
+  }
+
+  private getPlaces(lat: number, lng: number) {
+    if (this.apiLock === false) {
+      this.apiLock = true;
+      axios.post('/locations/around', {
+        Latitude: lat,
+        Longitude: lng,
+      }).then((resp) => {
+        this.placeLst = {
+          cloth: [],
+          battery: [],
+          shop: [],
+          recycle: [],
+        };
+        const mapper = {
+          1: this.placeLst.cloth,
+          2: this.placeLst.battery,
+          3: this.placeLst.shop,
+          4: this.placeLst.recycle,
+        };
+        resp.data.forEach((place: any) => {
+          const {
+            ID,
+            Location,
+          } = place;
+          const fetchLst = mapper[Location.LocationType as (1 | 2 | 3 | 4)];
+          fetchLst.push({ id: ID, ...Location });
+        });
+        this.queriedCoord = { lat, lng };
+        this.updatePlaceMarker();
+      }).finally(() => {
+        this.apiLock = false;
+      });
+    }
   }
 
   attachInput(input: HTMLInputElement) {
@@ -260,6 +288,11 @@ class MapManager {
         }
       },
     );
+  }
+
+  changePlaceFilter(k: PlaceType[]) {
+    this.placeFilter = k;
+    this.updatePlaceMarker();
   }
 
   updatePlaceMarker() {
