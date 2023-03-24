@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import StarIcon from "@mui/icons-material/Star";
 
-type ReportType = {
+type BookmarkType = {
   name: String;
-  locationType: Number;
   address: String;
-  content: String;
-  likes: String;
+  locationType: Number;
 };
 
-const MyReportComponent: React.FC<ReportType> = (props) => {
+const MyBookmarkComponent: React.FC<BookmarkType> = (props) => {
   const [type, setType] = useState<String>("");
 
   const typeHandler = () => {
@@ -30,25 +28,14 @@ const MyReportComponent: React.FC<ReportType> = (props) => {
         break;
     }
   };
-
   return (
     <div>
       <p>{type}</p>
       <p>{props.name}</p>
       <p>{props.address}</p>
-      <div>
-        <ThumbUpAltIcon />
-        <div>
-          <p>{props.likes}</p>
-        </div>
-      </div>
-      <p>{props.content}</p>
-      <div>
-        <button>수정</button>
-        <button>삭제</button>
-      </div>
+      <StarIcon />
     </div>
   );
 };
 
-export default MyReportComponent;
+export default MyBookmarkComponent;
