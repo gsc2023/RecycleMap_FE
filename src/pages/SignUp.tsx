@@ -9,9 +9,9 @@ import Paper from '@mui/material/Paper';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import ServiceForm from '../components/user/ServiceForm';
+// import ServiceForm from '../components/user/ServiceForm';
 import UserForm from '../components/user/UserForm';
-import EmailAuthForm from '../components/user/EmailAuthForm';
+// import EmailAuthForm from '../components/user/EmailAuthForm';
 
 const steps = ['약관 동의', '정보 입력', '이메일 인증']
 

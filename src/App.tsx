@@ -7,7 +7,7 @@ import SignUp from "./pages/SignUp";
 import SignUpRenew from "./pages/SignUpRenew";
 
 import { Global } from "@emotion/react";
-import { globalStyles } from "./styles/global.styles";
+// import { globalStyles } from "./styles/global.styles";
 
 const App: React.FC = () => {
   return (
