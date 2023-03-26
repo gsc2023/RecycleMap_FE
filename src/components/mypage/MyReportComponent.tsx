@@ -25,6 +25,10 @@ const MyReportComponent: React.FC<ReportType> = (props) => {
     }
   };
 
+  const modifyHandler = () => {};
+
+  const deleteHandler = () => {};
+
   return (
     <div>
       <p>{type}</p>
@@ -38,8 +42,8 @@ const MyReportComponent: React.FC<ReportType> = (props) => {
       </div>
       <p>{props.content}</p>
       <div>
-        <button>수정</button>
-        <button>삭제</button>
+        <button onClick={modifyHandler}>수정</button>
+        <button onClick={deleteHandler}>삭제</button>
       </div>
     </div>
   );

@@ -23,12 +23,15 @@ const MyBookmarkComponent: React.FC<BookmarkType> = (props) => {
         break;
     }
   };
+
+  const starHandler = () => {};
+
   return (
     <div>
       <p>{type}</p>
       <p>{props.name}</p>
       <p>{props.address}</p>
-      <StarIcon />
+      <StarIcon onClick={starHandler} />
     </div>
   );
 };
