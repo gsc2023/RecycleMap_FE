@@ -30,7 +30,7 @@ const MyProfile: React.FC<ProfileType> = (props) => {
       <div>
         <p>비밀번호</p>
         <input id="password" type="password"></input>
-        <p>{format(props.password)}</p>
+        <p>{props.password}</p>
         <button>변경</button>
       </div>
     </div>

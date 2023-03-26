@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 
-type ReportType = {
-  name: String;
-  locationType: Number;
-  address: String;
-  content: String;
-  likes: String;
-};
+import { ReportType } from "../../pages/Mypage";
 
 const MyReportComponent: React.FC<ReportType> = (props) => {
   const [type, setType] = useState<String>("");
