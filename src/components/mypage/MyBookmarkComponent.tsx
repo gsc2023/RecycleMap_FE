@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
-
-type BookmarkType = {
-  name: String;
-  address: String;
-  locationType: Number;
-};
+import { BookmarkType } from "../../pages/Mypage";
 
 const MyBookmarkComponent: React.FC<BookmarkType> = (props) => {
   const [type, setType] = useState<String>("");

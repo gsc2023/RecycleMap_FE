@@ -1,9 +1,5 @@
 import React from "react";
-
-type CommentType = {
-  name: String;
-  content: String;
-};
+import { CommentType } from "../../pages/Mypage";
 
 const MyCommentComponent: React.FC<CommentType> = (props) => {
   return (
