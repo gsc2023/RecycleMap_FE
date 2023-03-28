@@ -2,6 +2,13 @@ import React from "react";
 import MyReportComponent from "./MyReportComponent";
 
 import { ReportType } from "../../pages/Mypage";
+import { createStyle } from "../../lib/styleHelper";
+
+const style = createStyle({
+  componentContainer: {
+    display: "flex",
+  },
+});
 
 type ReportList = {
   list: ReportType[];

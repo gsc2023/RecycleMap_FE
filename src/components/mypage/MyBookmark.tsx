@@ -2,6 +2,7 @@ import React from "react";
 import MyBookmarkComponent from "./MyBookmarkComponent";
 
 import { BookmarkType } from "../../pages/Mypage";
+import { Grid, Box } from "@mui/material";
 
 type BookmarkList = {
   list: BookmarkType[];
@@ -9,15 +10,19 @@ type BookmarkList = {
 
 const MyBookmark: React.FC<BookmarkList> = ({ list }) => {
   return (
-    <React.Fragment>
+    <Grid container spacing={2}>
       {list.map((item: BookmarkType) => (
-        <MyBookmarkComponent
-          name={item.name}
-          address={item.address}
-          locationType={item.locationType}
-        />
+        <Grid item xs={6}>
+          <Box style={{ padding: "1.2rem" }}>
+            <MyBookmarkComponent
+              name={item.name}
+              address={item.address}
+              locationType={item.locationType}
+            />
+          </Box>
+        </Grid>
       ))}
-    </React.Fragment>
+    </Grid>
   );
 };
 

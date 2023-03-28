@@ -14,7 +14,7 @@ const style = createStyle({
     justifyContent: "center",
     alignItems: "center",
     rowGap: "1.5rem",
-    padding: "30px 370px",
+    padding: "30px 19.2vw",
   },
   paperContainer: {
     width: "100%",
@@ -24,7 +24,7 @@ const style = createStyle({
     backgroundColor: "#13BD7E",
     color: "#FFF",
     borderRadius: "1rem 1rem 0 0",
-    padding: "0.5rem 1rem",
+    padding: "0.7rem 1.2rem",
     fontWeight: "bold",
   },
 });
