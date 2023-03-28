@@ -13,7 +13,7 @@ const MyBookmark: React.FC<BookmarkList> = ({ list }) => {
     <Grid container spacing={2}>
       {list.map((item: BookmarkType) => (
         <Grid item xs={6}>
-          <Box style={{ padding: "1.2rem" }}>
+          <Box style={{ padding: "1.5rem" }}>
             <MyBookmarkComponent
               name={item.name}
               address={item.address}

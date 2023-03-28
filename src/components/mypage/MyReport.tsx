@@ -1,12 +1,17 @@
 import React from "react";
 import MyReportComponent from "./MyReportComponent";
 
+import { Box } from "@mui/material";
+
 import { ReportType } from "../../pages/Mypage";
 import { createStyle } from "../../lib/styleHelper";
 
 const style = createStyle({
   componentContainer: {
     display: "flex",
+    flexDirection: "column",
+    rowGap: "1.5rem",
+    padding: "1.5rem",
   },
 });
 
@@ -16,7 +21,7 @@ type ReportList = {
 
 const MyReport: React.FC<ReportList> = ({ list }) => {
   return (
-    <React.Fragment>
+    <Box sx={style.sx.componentContainer}>
       {list.map((item: ReportType) => (
         <MyReportComponent
           name={item.name}
@@ -26,7 +31,7 @@ const MyReport: React.FC<ReportList> = ({ list }) => {
           likes={item.likes}
         />
       ))}
-    </React.Fragment>
+    </Box>
   );
 };
 

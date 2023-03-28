@@ -29,6 +29,12 @@ const style = createStyle({
   },
 });
 
+export type ProfileType = {
+  nickname: string;
+  email: string;
+  password: string;
+};
+
 export type ReportType = {
   name: String;
   locationType: Number;
