@@ -4,6 +4,31 @@ import MyBookmark from "../components/mypage/MyBookmark";
 import MyComment from "../components/mypage/MyComment";
 import MyReport from "../components/mypage/MyReport";
 
+import { Box, Paper, Typography } from "@mui/material";
+import { createStyle } from "../lib/styleHelper";
+
+const style = createStyle({
+  pageContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    rowGap: "1.5rem",
+    padding: "30px 370px",
+  },
+  paperContainer: {
+    width: "100%",
+    borderRadius: "1rem",
+  },
+  titleContainer: {
+    backgroundColor: "#13BD7E",
+    color: "#FFF",
+    borderRadius: "1rem 1rem 0 0",
+    padding: "0.5rem 1rem",
+    fontWeight: "bold",
+  },
+});
+
 export type ReportType = {
   name: String;
   locationType: Number;
@@ -85,14 +110,52 @@ const Mypage: React.FC = () => {
 
   return (
     <React.Fragment>
-      <MyProfile
-        nickname={profileData.nickname}
-        email={profileData.email}
-        password={profileData.password}
-      />
-      <MyReport list={reportData} />
-      <MyComment list={commentData} />
-      <MyBookmark list={bookmarkData} />
+      <Box sx={style.sx.pageContainer}>
+        <Paper sx={style.sx.paperContainer}>
+          <Typography
+            variant="subtitle1"
+            component="h6"
+            sx={style.sx.titleContainer}
+          >
+            프로필 수정
+          </Typography>
+          <MyProfile
+            nickname={profileData.nickname}
+            email={profileData.email}
+            password={profileData.password}
+          />
+        </Paper>
+        <Paper sx={style.sx.paperContainer}>
+          <Typography
+            variant="subtitle1"
+            component="h6"
+            sx={style.sx.titleContainer}
+          >
+            나의 제보 관리
+          </Typography>
+          <MyReport list={reportData} />
+        </Paper>
+        <Paper sx={style.sx.paperContainer}>
+          <Typography
+            variant="subtitle1"
+            component="h6"
+            sx={style.sx.titleContainer}
+          >
+            나의 댓글 관리
+          </Typography>
+          <MyComment list={commentData} />
+        </Paper>
+        <Paper sx={style.sx.paperContainer}>
+          <Typography
+            variant="subtitle1"
+            component="h6"
+            sx={style.sx.titleContainer}
+          >
+            즐겨찾기
+          </Typography>
+          <MyBookmark list={bookmarkData} />
+        </Paper>
+      </Box>
     </React.Fragment>
   );
 };
