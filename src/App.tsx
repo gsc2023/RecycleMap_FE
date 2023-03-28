@@ -3,10 +3,11 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MapPage from "./pages/MapPage";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
+// import SignUp from "./pages/SignUp";
 import SignUpRenew from "./pages/SignUpRenew";
 
-import { Global } from "@emotion/react";
+// import { Global } from "@emotion/react";
+import SendReport from "./pages/SendReport";
 // import { globalStyles } from "./styles/global.styles";
 
 const App: React.FC = () => {
@@ -14,9 +15,10 @@ const App: React.FC = () => {
     <BrowserRouter>
         <Routes>
           <Route path="/map" element={<MapPage />} />
-          <Route path="*" element={<NotFound />} />
           <Route path="/auth/signin" element={<Login />} />
           <Route path="/auth/signup" element={<SignUpRenew />} />
+          <Route path="/report/send" element={<SendReport />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
     </BrowserRouter>
   );
