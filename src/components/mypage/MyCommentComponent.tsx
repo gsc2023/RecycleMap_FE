@@ -7,7 +7,7 @@ const MyCommentComponent: React.FC<CommentType> = (props) => {
   const style = createStyle({
     componentContainer: {
       display: "flex",
-      padding: "1.2rem",
+      padding: "1.5rem",
       justifyContent: "space-between",
       alignContent: "center",
     },

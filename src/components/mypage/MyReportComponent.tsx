@@ -2,11 +2,34 @@ import React, { useState } from "react";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 
 import { ReportType } from "../../pages/Mypage";
+import { useEffect } from "react";
+import { createStyle } from "../../lib/styleHelper";
+import { Box, Button, Typography } from "@mui/material";
+
+const style = createStyle({
+  titleContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  contentContainer: {
+    backgroundColor: "#F5FFFA",
+    border: "1px solid #DBF5EC",
+    borderRadius: "0.5rem",
+    padding: "1rem",
+  },
+  tagWrapper: {
+    backgroundColor: "#13BD7E",
+    color: "#FFF",
+    padding: "0.3rem 0.8rem",
+    borderRadius: "1rem",
+    fontWeight: "bold",
+  },
+});
 
 const MyReportComponent: React.FC<ReportType> = (props) => {
   const [type, setType] = useState<String>("");
 
-  const typeHandler = () => {
+  useEffect(() => {
     switch (props.locationType) {
       case 0:
         setType("의류수거함");
@@ -23,29 +46,45 @@ const MyReportComponent: React.FC<ReportType> = (props) => {
       default:
         break;
     }
-  };
+  }, []);
 
   const modifyHandler = () => {};
 
   const deleteHandler = () => {};
 
   return (
-    <div>
-      <p>{type}</p>
-      <p>{props.name}</p>
-      <p>{props.address}</p>
-      <div>
-        <ThumbUpAltIcon />
-        <div>
-          <p>{props.likes}</p>
-        </div>
-      </div>
-      <p>{props.content}</p>
-      <div>
-        <button onClick={modifyHandler}>수정</button>
-        <button onClick={deleteHandler}>삭제</button>
-      </div>
-    </div>
+    <Box>
+      <Box sx={style.sx.titleContainer}>
+        <Box>
+          <Box>
+            <Typography variant="caption" sx={style.sx.tagWrapper}>
+              {type}
+            </Typography>
+          </Box>
+          <Typography>{props.name}</Typography>
+          <Typography>{props.address}</Typography>
+        </Box>
+        <Box>
+          <Button variant="outlined">
+            <ThumbUpAltIcon />
+            <Box>
+              <Typography>{props.likes}</Typography>
+            </Box>
+          </Button>
+        </Box>
+      </Box>
+      <Box sx={style.sx.contentContainer}>
+        <Typography>{props.content}</Typography>
+      </Box>
+      <Box>
+        <Button variant="outlined" onClick={modifyHandler}>
+          수정
+        </Button>
+        <Button variant="outlined" onClick={deleteHandler}>
+          삭제
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
