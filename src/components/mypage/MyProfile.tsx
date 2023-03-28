@@ -14,7 +14,6 @@ const MyProfile: React.FC<ProfileType> = (props) => {
 
   return (
     <div>
-      <p className="title">프로필 수정</p>
       <div>
         <label>닉네임</label>
         <p>{props.nickname}</p>
