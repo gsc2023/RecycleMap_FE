@@ -7,12 +7,14 @@ import { Box, Typography } from "@mui/material";
 
 const style = createStyle({
   componentContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
     border: "1px solid #EEE",
     borderRadius: "1rem",
     padding: "1.5rem 1.8rem",
+  },
+  contentContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   bodyContainer: {
     display: "flex",
@@ -53,14 +55,14 @@ const MyBookmarkComponent: React.FC<BookmarkType> = (props) => {
   const starHandler = () => {};
 
   return (
-    <div>
-      <Box sx={style.sx.componentContainer}>
+    <Box sx={style.sx.componentContainer}>
+      <Box sx={{ paddingBottom: "0.3rem" }}>
+        <Typography variant="caption" sx={style.sx.tagWrapper}>
+          {type}
+        </Typography>
+      </Box>
+      <Box sx={style.sx.contentContainer}>
         <Box sx={style.sx.bodyContainer}>
-          <Box>
-            <Typography variant="caption" sx={style.sx.tagWrapper}>
-              {type}
-            </Typography>
-          </Box>
           <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
             {props.name}
           </Typography>
@@ -70,7 +72,7 @@ const MyBookmarkComponent: React.FC<BookmarkType> = (props) => {
         </Box>
         <StarIcon style={{ color: "#13BD7E" }} onClick={starHandler} />
       </Box>
-    </div>
+    </Box>
   );
 };
 
