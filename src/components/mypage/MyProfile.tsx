@@ -1,8 +1,10 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import React from "react";
-import { ProfileType } from "../../pages/Mypage";
+import React, { useEffect, useState } from "react";
 
+import { ProfileType } from "../../pages/Mypage";
 import { createStyle } from "../../lib/styleHelper";
+
+import axios from "axios";
 
 const style = createStyle({
   contentContainer: {
@@ -28,6 +30,34 @@ const style = createStyle({
 });
 
 const MyProfile: React.FC<ProfileType> = (props) => {
+  const [name, setName] = useState<String>("");
+  const [email, setEmail] = useState<String>("");
+  const [password, setPassword] = useState<String>("");
+  const [visible, setVisible] = useState<String>("");
+
+  useEffect(() => {
+    if (props) {
+      setName(props.nickname);
+      setEmail(props.email);
+      setPassword(props.password);
+    }
+  }, []);
+
+  const modifyHandler = (
+    params: String,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    setVisible(params);
+  };
+
+  const saveHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const data = e.currentTarget;
+    axios.patch("https://vscode-qjnbi.run.goorm.site/proxy/8080/reports/");
+    setVisible("");
+  };
+
   return (
     <Box sx={style.sx.contentContainer}>
       <Box sx={{ display: "flex", flexDirection: "column", rowGap: "0.7rem" }}>
@@ -36,17 +66,47 @@ const MyProfile: React.FC<ProfileType> = (props) => {
         </Typography>
         <Box sx={style.sx.componentContainer}>
           <Box>
-            <TextField
-              variant="outlined"
-              id="name"
-              type="text"
-              defaultValue={props.nickname}
-              disabled
-              sx={style.sx.inputWrapper}
-              size="small"
-            ></TextField>
+            {visible === "name" ? (
+              <TextField
+                variant="outlined"
+                id="name"
+                type="text"
+                defaultValue={props.nickname}
+                sx={style.sx.inputWrapper}
+                size="small"
+              ></TextField>
+            ) : (
+              <TextField
+                variant="outlined"
+                id="name"
+                type="text"
+                defaultValue={name}
+                disabled
+                sx={style.sx.inputWrapper}
+                size="small"
+              ></TextField>
+            )}
           </Box>
-          <Button variant="outlined">변경</Button>
+          {visible === "name" ? (
+            <Button
+              variant="outlined"
+              onClick={(e) => {
+                modifyHandler("name", e);
+              }}
+            >
+              변경
+            </Button>
+          ) : (
+            <Button
+              variant="outlined"
+              onClick={(e) => {
+                setName(e.currentTarget);
+                saveHandler(e);
+              }}
+            >
+              저장
+            </Button>
+          )}
         </Box>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "column", rowGap: "0.7rem" }}>

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MyProfile from "../components/mypage/MyProfile";
 import MyBookmark from "../components/mypage/MyBookmark";
 import MyComment from "../components/mypage/MyComment";
 import MyReport from "../components/mypage/MyReport";
+
+import axios from "axios";
 
 import { Box, Paper, Typography } from "@mui/material";
 import { createStyle } from "../lib/styleHelper";
@@ -55,64 +57,36 @@ export type CommentType = {
 };
 
 const Mypage: React.FC = () => {
-  const profileData = {
-    nickname: "닉네임",
-    email: "example@example.com",
-    password: "password",
-  };
+  const [profileData, setProfileData] = useState<ProfileType>();
+  const [bookmarkData, setBookmarkData] = useState<BookmarkType[]>([]);
+  const [reportData, setReportData] = useState<ReportType[]>([]);
+  const [commentData, setCommentData] = useState<CommentType[]>([]);
 
-  const bookmarkData: BookmarkType[] = [
-    {
-      name: "아름다운가게 양재점",
-      address: "서울 강남구 남부순환로351길 34",
-      locationType: 2,
-    },
-    {
-      name: "아름다운가게 양재점",
-      address: "서울 강남구 남부순환로351길 34",
-      locationType: 2,
-    },
-  ];
+  useEffect(() => {
+    axios
+      .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/reports/")
+      .then((res) => {
+        setProfileData(res.data);
+      });
 
-  const commentData: CommentType[] = [
-    {
-      name: "아름다운가게 양재점",
-      content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      name: "아름다운가게 양재점",
-      content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      name: "아름다운가게 양재점",
-      content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      name: "아름다운가게 양재점",
-      content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      name: "아름다운가게 양재점",
-      content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-  ];
+    axios
+      .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/reports/")
+      .then((res) => {
+        setBookmarkData(res.data);
+      });
 
-  const reportData: ReportType[] = [
-    {
-      name: "아름다운가게 양재점",
-      locationType: 2,
-      address: "서울 강남구 남부순환로351길 34",
-      content: "제보 내용입니다.",
-      likes: "100",
-    },
-    {
-      name: "아름다운가게 양재점",
-      locationType: 2,
-      address: "서울 강남구 남부순환로351길 34",
-      content: "제보 내용입니다.",
-      likes: "100",
-    },
-  ];
+    axios
+      .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/reports/")
+      .then((res) => {
+        setReportData(res.data);
+      });
+
+    axios
+      .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/reports/")
+      .then((res) => {
+        setCommentData(res.data);
+      });
+  }, []);
 
   return (
     <React.Fragment>

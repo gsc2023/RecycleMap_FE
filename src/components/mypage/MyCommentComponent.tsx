@@ -19,7 +19,9 @@ const MyCommentComponent: React.FC<CommentType> = (props) => {
     },
   });
 
-  const deleteHandler = () => {};
+  const deleteHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+  };
 
   return (
     <Box sx={style.sx.componentContainer}>

@@ -6,6 +6,8 @@ import { useEffect } from "react";
 import { createStyle } from "../../lib/styleHelper";
 import { Box, Button, Typography } from "@mui/material";
 
+import axios from "axios";
+
 const style = createStyle({
   componentContainer: {
     display: "flex",
@@ -58,9 +60,13 @@ const MyReportComponent: React.FC<ReportType> = (props) => {
     }
   }, []);
 
-  const modifyHandler = () => {};
+  const modifyHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+  };
 
-  const deleteHandler = () => {};
+  const deleteHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+  };
 
   return (
     <Box sx={style.sx.componentContainer}>
