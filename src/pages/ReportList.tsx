@@ -16,6 +16,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 const style = createStyle({
     tableHead: {
@@ -55,21 +56,42 @@ interface row {
     User: user;
 }
 
+const LIKE_THRESHOLD = 10;
+
 const ReportList: React.FC = () => {
+    const [originData, setOriginData] = useState<Array<row>>([]);
     const [data, setData] = useState<Array<row>>([]);
     const [rows, setRows] = useState<Array<row>>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [sortBy, setSortBy] = useState<boolean>(true);
 
     useEffect(() => {
         axios.get("https://vscode-qjnbi.run.goorm.site/proxy/8080/reports/").then(({ data }) => {
             console.log(data);
             data.sort((a: any, b: any) => a.Date - b.Date);
+            setOriginData(data);
             setData(data);
             setRows(data.slice(0, 10));
         });
     }, []);
 
     const onPageChange = (e: any, value: any) => {
+        setCurrentPage(value);
         setRows(data.slice(10 * (value - 1), 10 * value));
+    };
+
+    const handleClickOpen = () => {
+        // redirect
+    };
+
+    const handleClickBestReport = () => {
+        const data = sortBy
+            ? originData.filter((data) => data.Report.Like >= LIKE_THRESHOLD).sort((a: any, b: any) => a.Like - b.Like)
+            : originData;
+        setData(data);
+        setRows(data.slice(0, 10));
+        setCurrentPage(1);
+        setSortBy((prev) => !prev);
     };
 
     return (
@@ -126,12 +148,12 @@ const ReportList: React.FC = () => {
                                         //sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell align="center" sx={{ width: 50 }}>
-                                            {index}
+                                            {index + 1}
                                         </TableCell>
-                                        <TableCell align="right">{row.Report.Name}</TableCell>
-                                        <TableCell align="right">{date.toLocaleString()}</TableCell>
-                                        <TableCell align="right">{row.User.DisplayName}</TableCell>
-                                        <TableCell align="right">{row.Report.Like}</TableCell>
+                                        <TableCell align="center">{row.Report.Name}</TableCell>
+                                        <TableCell align="center">{date.toLocaleString()}</TableCell>
+                                        <TableCell align="center">{row.User.DisplayName}</TableCell>
+                                        <TableCell align="center">{row.Report.Like}</TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -139,15 +161,30 @@ const ReportList: React.FC = () => {
                     </Table>
                 </TableContainer>
             </Box>
-            <Stack>
-                <Pagination
-                    count={rows.length / 10 + (rows.length % 10 ? 1 : 0)}
-                    color="secondary"
-                    variant="outlined"
-                    shape="rounded"
-                    onChange={onPageChange}
-                />
-            </Stack>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 20}}>
+                {sortBy ? (
+                    <Button variant="contained" color="primary" onClick={handleClickBestReport}>
+                        BEST 게시물만 보기
+                    </Button>
+                ) : (
+                    <Button variant="contained" color="primary" onClick={handleClickBestReport}>
+                        일반 게시물 보기
+                    </Button>
+                )}
+                <Stack>
+                    <Pagination
+                        count={rows.length / 10 + (rows.length % 10 ? 1 : 0)}
+                        color="secondary"
+                        variant="outlined"
+                        shape="rounded"
+                        page={currentPage}
+                        onChange={onPageChange}
+                    />
+                </Stack>
+                <Button variant="contained" color="primary" onClick={handleClickOpen}>
+                    제보하기
+                </Button>
+            </div>
         </Box>
     );
 };
