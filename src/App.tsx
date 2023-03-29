@@ -18,8 +18,10 @@ const App: React.FC = () => {
   useEffect(() => {
     axios.get('/bookmarks/')
       .then((r) => initBookMarks(r.data))
-      .catch(() => {});
-  }, []);
+      .catch(() => {
+        console.log('server not yet')
+      });
+  }, [initBookMarks]);
 
   return (
     <BrowserRouter>

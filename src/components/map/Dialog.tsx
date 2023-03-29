@@ -22,7 +22,7 @@ const MapDialog: React.FC = () => {
     }).then(() => {
       toggleBookMark(id);
     });
-  }, []);
+  }, [toggleBookMark]);
 
   useEffect(() => {
     mapInstance.addEventListener('clickMarker', setSltPlace);

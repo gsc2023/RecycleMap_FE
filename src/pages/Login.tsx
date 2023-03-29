@@ -1,37 +1,38 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios, { AxiosResponse } from "axios";
-
-import Container from "@mui/material/Container";
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import { TextField } from '@mui/material';
+import {
+  TextField,
+  Container,
+  Paper,
+  Typography,
+  Box,
+  Button,
+} from '@mui/material';
+import { loginFirebase } from '../lib/firebase';
+import { useAuthStore } from '../store';
 
 const Login: React.FC = () => {
-
   const navigate = useNavigate();
+  const { login } = useAuthStore();
+  const [state, setState] = useState({ email: '', passwd: '' });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-
-    const userData = {
-      Email: data.get('email'),
-      Password: data.get('password'),
-    };
-
-    axios.post('/login', userData).then((response: AxiosResponse) => {
-      alert("로그인이 정상적으로 완료되었습니다.");
-      console.log(response.data);
-      navigate('/');
-    })
-    .catch(() => {
-      console.log("Axios Error");
+    loginFirebase(state.email, state.passwd).then((user) => {
+      if (!user) {
+        return;
+      }
+      user.getIdToken().then((accessToken) => {
+        login({
+          uid: user.uid,
+          displayName: user.displayName || '',
+          email: user.email || '',
+          accessToken,
+        });
+        navigate('/map');
+      });
     });
-
-  };
+  }, [state, login, navigate]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -46,6 +47,8 @@ const Login: React.FC = () => {
             label="Email"
             name="email"
             autoComplete="email"
+            value={state.email}
+            onChange={(e) => setState({ ...state, email: e.target.value })}
             autoFocus
           />
           <TextField 
@@ -57,6 +60,8 @@ const Login: React.FC = () => {
             label="Password"
             name="password"
             autoComplete="password"
+            value={state.passwd}
+            onChange={(e) => setState({ ...state, passwd: e.target.value })}
             autoFocus
           />
           <Button
@@ -69,7 +74,9 @@ const Login: React.FC = () => {
             Sign In
           </Button>
         </Box>
-        <Box display="flex" justifyContent="center"><Button onClick={() => navigate('/auth/signup')}>회원가입하기</Button></Box>
+        <Link to='/auth/signup' style={{ textDecoration: "none" }}>
+          <Box display="flex" justifyContent="center">회원가입하기</Box>
+        </Link>
       </Paper>
     </Container>
   );

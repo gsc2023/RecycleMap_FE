@@ -4,12 +4,12 @@ const instance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
 });
 
-export const login = (accessToken: string) => {
+export const setAuthAxios = (accessToken: string) => {
   instance.defaults.headers['AccessToken'] = accessToken;
 };
 
-export const logout = () => {
+export const unsetAuthAxios = () => {
   delete instance.defaults.headers['AccessToken'];
-};
+}
 
 export default instance;

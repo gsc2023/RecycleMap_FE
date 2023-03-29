@@ -65,7 +65,8 @@ const SendReport: React.FC = () => {
     pType,
     content,
     loading,
-    imgFile
+    imgFile,
+    navigate,
   ]);
 
   return (

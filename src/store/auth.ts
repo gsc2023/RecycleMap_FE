@@ -1,32 +1,61 @@
 import { create } from 'zustand';
+import { setAuthAxios, unsetAuthAxios } from '../lib/axios';
 import { MethodWrap, OnlyState } from './base';
-import { login, logout } from '../lib/axios';
 
-interface MemberVars {
-  authToken: string | null;
+interface LoggedIn {
+  login: true;
+  uid: string;
+  email: string;
+  displayName: string;
+  accessToken: string;
+}
+
+interface LoggedOut {
+  login: false;
 }
 
 interface MethodParam {
-  login: string;
+  login: {
+    uid: string;
+    email: string;
+    displayName: string;
+    accessToken: string;
+  };
   logout: void;
+}
+
+interface MemberVars {
+  user: LoggedIn | LoggedOut;
 }
 
 type StateType = MemberVars & MethodWrap<MethodParam>;
 
-const INIT_STATE: MemberVars = {
-  authToken: null,
+const item = localStorage.getItem('firebase:ac');
+if (item) {
+  const data = JSON.parse(item);
+  setAuthAxios(data.user.accessToken);
+}
+const INIT_STATE: MemberVars = item ? JSON.parse(item) : {
+  user: {
+    login: false,
+  },
 };
+
 
 const useStore = create<StateType>((set) => ({
   ...INIT_STATE,
-  login(authToken) {
-    set(() => ({ authToken }));
-    login(authToken);
+  login(p) {
+    setAuthAxios(p.accessToken);
+    const ns = { user: { ...p, login: true, } };
+    localStorage.setItem('firebase:ac', JSON.stringify(ns));
+    set(ns);
   },
   logout() {
-    set(() => ({ authToken: null }));
-    logout();
-  }
+    unsetAuthAxios();
+    const ns = { user: { login: false } };
+    localStorage.setItem('firebase:ac', JSON.stringify(ns));
+    set({ user: { login: false } });
+  },
 }));
 
 export default useStore as OnlyState<StateType>;
