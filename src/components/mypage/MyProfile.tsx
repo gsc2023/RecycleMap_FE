@@ -32,14 +32,12 @@ const style = createStyle({
 const MyProfile: React.FC<ProfileType> = (props) => {
   const [name, setName] = useState<String>("");
   const [email, setEmail] = useState<String>("");
-  const [password, setPassword] = useState<String>("");
   const [visible, setVisible] = useState<String>("");
 
   useEffect(() => {
     if (props) {
       setName(props.nickname);
       setEmail(props.email);
-      setPassword(props.password);
     }
   }, []);
 
@@ -51,103 +49,139 @@ const MyProfile: React.FC<ProfileType> = (props) => {
     setVisible(params);
   };
 
-  const saveHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const saveHandler = (
+    params: String,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault();
-    const data = e.currentTarget;
-    axios.patch("https://vscode-qjnbi.run.goorm.site/proxy/8080/reports/");
-    setVisible("");
+
+    const userData = {
+      Email: email,
+      DisplayName: name,
+    };
+
+    axios.patch("/my/edit/", userData).then((res) => {
+      setVisible("");
+    });
   };
 
   return (
-    <Box sx={style.sx.contentContainer}>
-      <Box sx={{ display: "flex", flexDirection: "column", rowGap: "0.7rem" }}>
-        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-          닉네임
-        </Typography>
-        <Box sx={style.sx.componentContainer}>
-          <Box>
+    <React.Fragment>
+      {name && email ? (
+        <Box sx={style.sx.contentContainer}>
+          <Box
+            sx={{ display: "flex", flexDirection: "column", rowGap: "0.7rem" }}
+          >
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+              닉네임
+            </Typography>
             {visible === "name" ? (
-              <TextField
-                variant="outlined"
-                id="name"
-                type="text"
-                defaultValue={props.nickname}
-                sx={style.sx.inputWrapper}
-                size="small"
-              ></TextField>
+              <Box sx={style.sx.componentContainer}>
+                <TextField
+                  variant="outlined"
+                  id="name"
+                  type="text"
+                  defaultValue={name}
+                  sx={style.sx.inputWrapper}
+                  size="small"
+                  onChange={(
+                    event: React.ChangeEvent<
+                      HTMLTextAreaElement | HTMLInputElement
+                    >
+                  ) => setName(event.target.value)}
+                ></TextField>
+                <Button
+                  variant="outlined"
+                  onClick={(e) => {
+                    saveHandler("name", e);
+                  }}
+                >
+                  저장
+                </Button>
+              </Box>
             ) : (
-              <TextField
-                variant="outlined"
-                id="name"
-                type="text"
-                defaultValue={name}
-                disabled
-                sx={style.sx.inputWrapper}
-                size="small"
-              ></TextField>
+              <Box sx={style.sx.componentContainer}>
+                <Box>
+                  <TextField
+                    variant="outlined"
+                    id="name"
+                    type="text"
+                    defaultValue={name}
+                    disabled
+                    sx={style.sx.inputWrapper}
+                    size="small"
+                  ></TextField>
+                </Box>
+                <Button
+                  variant="outlined"
+                  onClick={(e) => {
+                    modifyHandler("name", e);
+                  }}
+                >
+                  변경
+                </Button>
+              </Box>
             )}
           </Box>
-          {visible === "name" ? (
-            <Button
-              variant="outlined"
-              onClick={(e) => {
-                modifyHandler("name", e);
-              }}
-            >
-              변경
-            </Button>
-          ) : (
-            <Button
-              variant="outlined"
-              onClick={(e) => {
-                setName(e.currentTarget);
-                saveHandler(e);
-              }}
-            >
-              저장
-            </Button>
-          )}
-        </Box>
-      </Box>
-      <Box sx={{ display: "flex", flexDirection: "column", rowGap: "0.7rem" }}>
-        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-          이메일
-        </Typography>
-        <Box sx={style.sx.componentContainer}>
-          <Box>
-            <TextField
-              variant="outlined"
-              id="email"
-              type="email"
-              defaultValue={props.email}
-              disabled
-              sx={style.sx.inputWrapper}
-              size="small"
-            ></TextField>
+          <Box
+            sx={{ display: "flex", flexDirection: "column", rowGap: "0.7rem" }}
+          >
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+              이메일
+            </Typography>
+            {visible === "email" ? (
+              <Box sx={style.sx.componentContainer}>
+                <TextField
+                  variant="outlined"
+                  id="name"
+                  type="text"
+                  defaultValue={email}
+                  sx={style.sx.inputWrapper}
+                  size="small"
+                  onChange={(
+                    event: React.ChangeEvent<
+                      HTMLTextAreaElement | HTMLInputElement
+                    >
+                  ) => setEmail(event.target.value)}
+                ></TextField>
+                <Button
+                  variant="outlined"
+                  onClick={(e) => {
+                    saveHandler("name", e);
+                  }}
+                >
+                  저장
+                </Button>
+              </Box>
+            ) : (
+              <Box sx={style.sx.componentContainer}>
+                <Box>
+                  <TextField
+                    variant="outlined"
+                    id="email"
+                    type="email"
+                    defaultValue={email}
+                    disabled
+                    sx={style.sx.inputWrapper}
+                    size="small"
+                  ></TextField>
+                </Box>
+                <Button
+                  variant="outlined"
+                  onClick={(e) => {
+                    modifyHandler("email", e);
+                  }}
+                >
+                  변경
+                </Button>
+              </Box>
+            )}
           </Box>
-          <Button variant="outlined">변경</Button>
         </Box>
-      </Box>
-      <Box sx={{ display: "flex", flexDirection: "column", rowGap: "0.7rem" }}>
-        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-          비밀번호
-        </Typography>
-        <Box sx={style.sx.componentContainer}>
-          <Box>
-            <TextField
-              variant="outlined"
-              id="password"
-              type="password"
-              defaultValue={props.password}
-              disabled
-              sx={style.sx.inputWrapper}
-              size="small"
-            ></TextField>
-          </Box>
-          <Button variant="outlined">변경</Button>
-        </Box>
-      </Box>
-    </Box>
+      ) : (
+        <React.Fragment></React.Fragment>
+      )}
+    </React.Fragment>
   );
 };
 

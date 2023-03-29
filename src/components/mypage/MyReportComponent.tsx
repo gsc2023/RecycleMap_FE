@@ -40,6 +40,8 @@ const style = createStyle({
 
 const MyReportComponent: React.FC<ReportType> = (props) => {
   const [type, setType] = useState<String>("");
+  const [content, setContent] = useState<String>("");
+  const [visible, setVisible] = useState(0);
 
   useEffect(() => {
     switch (props.locationType) {
@@ -58,6 +60,8 @@ const MyReportComponent: React.FC<ReportType> = (props) => {
       default:
         break;
     }
+
+    setContent(props.content);
   }, []);
 
   const modifyHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -103,7 +107,7 @@ const MyReportComponent: React.FC<ReportType> = (props) => {
         </Box>
       </Box>
       <Box sx={style.sx.contentContainer}>
-        <Typography>{props.content}</Typography>
+        {visible ? <div></div> : <Typography>{content}</Typography>}
       </Box>
       <Box sx={style.sx.buttonContainer}>
         <Button variant="outlined" onClick={modifyHandler}>
