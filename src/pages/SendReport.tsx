@@ -1,9 +1,11 @@
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
-import { Box, Button, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, Input, MenuItem, Select, TextField, Typography } from '@mui/material';
 import MapManager from '../store/map';
 import axios from '../lib/axios';
+import { useNavigate } from 'react-router-dom';
 
 const SendReport: React.FC = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [addr, setAddr] = useState('');
   const [nowLoc, setNowLoc] = useState<google.maps.LatLngLiteral>({
@@ -13,7 +15,7 @@ const SendReport: React.FC = () => {
   const [pName, setPName] = useState('');
   const [pType, setPType] = useState<1|2|3|4>(1);
   const [content, setContent] = useState('');
-  // const [imgPath, setImgPath] = useState('');
+  const [imgFile, setImgFile] = useState<File | null>(null);
 
   const mapInstance = MapManager.getInstance();
 
@@ -47,21 +49,23 @@ const SendReport: React.FC = () => {
       alert('이름을 입력해주세요.');
       return;
     }
-    axios.post('/reports/new', {
-      LocationType: pType,
-      Name: pName,
-      Latitude: nowLoc.lat,
-      Longitude: nowLoc.lng,
-      Content: content,
-    }).then(() => {
-      // navigate(report/list)
-    });
+    const fd = new FormData();
+    fd.append('LocationType', pType.toString());
+    fd.append('Name', pName);
+    fd.append('Latitude', nowLoc.lat.toString());
+    fd.append('Longitude', nowLoc.lng.toString());
+    fd.append('Content', content);
+    if (imgFile) {
+      fd.append('Image', imgFile);
+    }
+    axios.post('/reports/new', fd).then(() => navigate('/report'));
   }, [
     nowLoc,
     pName,
     pType,
     content,
     loading,
+    imgFile
   ]);
 
   return (
@@ -117,6 +121,15 @@ const SendReport: React.FC = () => {
           onChange={e => setContent(e.target.value)}
           rows="3"
         />
+        {true &&<Input
+          type="file"
+          inputProps={{
+            accept: 'image/*',
+            capture: 'camera',
+          }}
+          // value={imgFile}
+          onChange={e => setImgFile((e.target as any).files[0])}
+        />}
         <Button type="submit" disabled={loading}>
           제보하기
         </Button>

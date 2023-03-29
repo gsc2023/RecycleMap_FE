@@ -170,7 +170,7 @@ const ReportList: React.FC = () => {
         )}
         <Stack>
           <Pagination
-            count={rows.length / 10 + (rows.length % 10 ? 1 : 0)}
+            count={~~(rows.length / 10) + (rows.length % 10 ? 1 : 0)}
             color="secondary"
             variant="outlined"
             shape="rounded"

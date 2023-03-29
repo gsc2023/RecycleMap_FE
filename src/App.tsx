@@ -1,13 +1,12 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import MapPage from "./pages/MapPage";
-import NotFound from "./pages/NotFound";
-import Login from "./pages/Login";
-// import SignUp from "./pages/SignUp";
-import SignUpRenew from "./pages/SignUpRenew";
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import MapPage from './pages/MapPage';
+import NotFound from './pages/NotFound';
+import Login from './pages/Login';
+// import SignUp from './pages/SignUp';
+import SignUpRenew from './pages/SignUpRenew';
 import ReportList from './pages/ReportList';
-import SendReport from "./pages/SendReport";
-import { Global } from "@emotion/react";
+import SendReport from './pages/SendReport';
 // import { globalStyles } from "./styles/global.styles";
 
 const App: React.FC = () => {

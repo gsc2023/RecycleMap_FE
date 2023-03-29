@@ -4,9 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+// import { initializeApp } from 'firebase/app';
+// import { getAnalytics } from 'firebase/analytics';
+// import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 // const firebaseConfig = {
 //   apiKey: 'AIzaSyDQDvn9hxPmB17tgPoZ-BhoO_idLIEwtwc',
