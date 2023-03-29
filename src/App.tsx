@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MapPage from './pages/MapPage';
 import NotFound from './pages/NotFound';
@@ -7,9 +7,20 @@ import Login from './pages/Login';
 import SignUpRenew from './pages/SignUpRenew';
 import ReportList from './pages/ReportList';
 import SendReport from './pages/SendReport';
+import axios from './lib/axios';
+import { useBookmarkStore } from './store';
 // import { globalStyles } from "./styles/global.styles";
 
 const App: React.FC = () => {
+
+  const { initBookMarks } = useBookmarkStore();
+
+  useEffect(() => {
+    axios.get('/bookmarks/')
+      .then((r) => initBookMarks(r.data))
+      .catch(() => {});
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>

@@ -1,15 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { DialogContent, Dialog, Box, Typography, Chip } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
+import { DialogContent, Dialog, Box, Typography, Chip, IconButton } from '@mui/material';
 import MapManager from '../../store/map';
 import { PlaceInfo } from '../../store/map/type';
+import axios from '../../lib/axios';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { useBookmarkStore } from '../../store';
 
 const placeType = ['', '의류 수거함', '폐건전지/현광등', '아름다운가게', '재활용품판매;'];
 
 const MapDialog: React.FC = () => {
+  const { toggleBookMark } = useBookmarkStore();
   const [sltPlace, setSltPlace] = useState<PlaceInfo | null>(null);
 
   const mapInstance = MapManager.getInstance();
+
+  const handleStarClick = useCallback((id: string) => {
+    axios.post('/bookmarks/', {
+      LocationID: id,
+    }).then(() => {
+      toggleBookMark(id);
+    });
+  }, []);
 
   useEffect(() => {
     mapInstance.addEventListener('clickMarker', setSltPlace);
@@ -53,9 +66,18 @@ const MapDialog: React.FC = () => {
           <Box sx={{ width: '47%', display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ mb: 3 }}>
               <Chip label={placeType[sltPlace.LocationType]} color="primary" sx={{ color: '#fff' }} />
-              <Typography component="h1" sx={{ fontWeight: 'bold', fontSize: '32px' }}>
-                {sltPlace.Content}
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography component="h1" sx={{ fontWeight: 'bold', fontSize: '32px' }}>
+                  {sltPlace.Content}
+                </Typography>
+                <IconButton onClick={() => handleStarClick(sltPlace.id)}>
+                  {true ? (
+                    <StarIcon sx={{ color: '#13BD7E', fontSize: '32px' }} />
+                  ) : (
+                    <StarBorderIcon sx={{ color: '#13BD7E', fontSize: '32px' }} />
+                  )}
+                </IconButton>
+              </Box>
               <Typography>
                 주소주소주소주소주소주소
               </Typography>
