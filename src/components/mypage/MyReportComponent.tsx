@@ -7,6 +7,11 @@ import { createStyle } from "../../lib/styleHelper";
 import { Box, Button, Typography } from "@mui/material";
 
 const style = createStyle({
+  componentContainer: {
+    display: "flex",
+    flexDirection: "column",
+    rowGap: "1rem",
+  },
   titleContainer: {
     display: "flex",
     justifyContent: "space-between",
@@ -16,6 +21,11 @@ const style = createStyle({
     border: "1px solid #DBF5EC",
     borderRadius: "0.5rem",
     padding: "1rem",
+  },
+  buttonContainer: {
+    display: "flex",
+    justifyContent: "flex-end",
+    columnGap: "0.5rem",
   },
   tagWrapper: {
     backgroundColor: "#13BD7E",
@@ -53,30 +63,43 @@ const MyReportComponent: React.FC<ReportType> = (props) => {
   const deleteHandler = () => {};
 
   return (
-    <Box>
-      <Box sx={style.sx.titleContainer}>
-        <Box>
+    <Box sx={style.sx.componentContainer}>
+      <Box>
+        <Box sx={{ paddingBottom: "0.3rem" }}>
+          <Typography variant="caption" sx={style.sx.tagWrapper}>
+            {type}
+          </Typography>
+        </Box>
+        <Box sx={style.sx.titleContainer}>
           <Box>
-            <Typography variant="caption" sx={style.sx.tagWrapper}>
-              {type}
+            <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
+              {props.name}
+            </Typography>
+            <Typography variant="subtitle2" style={{ color: "#808080" }}>
+              {props.address}
             </Typography>
           </Box>
-          <Typography>{props.name}</Typography>
-          <Typography>{props.address}</Typography>
-        </Box>
-        <Box>
-          <Button variant="outlined">
-            <ThumbUpAltIcon />
-            <Box>
-              <Typography>{props.likes}</Typography>
-            </Box>
-          </Button>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignContent: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Button variant="outlined">
+              <ThumbUpAltIcon sx={{ transform: "scale(0.75)" }} />
+              <Box>
+                <Typography variant="subtitle2">{props.likes}</Typography>
+              </Box>
+            </Button>
+          </Box>
         </Box>
       </Box>
       <Box sx={style.sx.contentContainer}>
         <Typography>{props.content}</Typography>
       </Box>
-      <Box>
+      <Box sx={style.sx.buttonContainer}>
         <Button variant="outlined" onClick={modifyHandler}>
           수정
         </Button>

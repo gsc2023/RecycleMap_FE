@@ -22,6 +22,9 @@ const style = createStyle({
     backgroundColor: "#F5FFFA",
     borderColor: "#DBF5EC !important",
   },
+  input: {
+    color: "#DBF5EC",
+  },
 });
 
 const MyProfile: React.FC<ProfileType> = (props) => {
