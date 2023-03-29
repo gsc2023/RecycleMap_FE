@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from "axios";
-
+import axios from '../lib/axios';
 import Container from "@mui/material/Container";
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -29,12 +28,8 @@ const SignUpRenew: React.FC = () => {
 
     const userData = {
       Email: data.get('email'),
-      EmailVerified: true,
-      PhonNumber: "0000",
       Password: data.get('password'),
-      DisplayName: data.get('name'),
-      PhotoURL: "default",
-      Disabled: false,
+      DisplayName: data.get('nickname'),
     };
 
     axios.post('/auth/signup', userData).then(() => {

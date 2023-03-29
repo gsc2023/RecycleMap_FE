@@ -8,16 +8,16 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useBookmarkStore } from '../../store';
 
-const placeType = ['', '의류 수거함', '폐건전지/현광등', '아름다운가게', '재활용품판매;'];
+const placeType = ['', '의류 수거함', '폐건전지/현광등', '아름다운가게', '재활용품판매'];
 
 const MapDialog: React.FC = () => {
-  const { toggleBookMark } = useBookmarkStore();
+  const { toggleBookMark, bookmarks } = useBookmarkStore();
   const [sltPlace, setSltPlace] = useState<PlaceInfo | null>(null);
 
   const mapInstance = MapManager.getInstance();
 
   const handleStarClick = useCallback((id: string) => {
-    axios.post('/bookmarks/', {
+    axios.post(`/bookmarks/${id}`, {
       LocationID: id,
     }).then(() => {
       toggleBookMark(id);
@@ -71,7 +71,7 @@ const MapDialog: React.FC = () => {
                   {sltPlace.Content}
                 </Typography>
                 <IconButton onClick={() => handleStarClick(sltPlace.id)}>
-                  {true ? (
+                  {bookmarks.includes(sltPlace.id) ? (
                     <StarIcon sx={{ color: '#13BD7E', fontSize: '32px' }} />
                   ) : (
                     <StarBorderIcon sx={{ color: '#13BD7E', fontSize: '32px' }} />
