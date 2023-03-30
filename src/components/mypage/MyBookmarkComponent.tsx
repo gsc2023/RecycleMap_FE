@@ -34,7 +34,7 @@ const MyBookmarkComponent: React.FC<BookmarkType> = (props) => {
   const [type, setType] = useState<String>("");
 
   useEffect(() => {
-    switch (props.locationType) {
+    switch (props.LocationType) {
       case 0:
         setType("의류수거함");
         break;
@@ -64,10 +64,10 @@ const MyBookmarkComponent: React.FC<BookmarkType> = (props) => {
       <Box sx={style.sx.contentContainer}>
         <Box sx={style.sx.bodyContainer}>
           <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
-            {props.name}
+            {props.Name}
           </Typography>
           <Typography variant="subtitle2" style={{ color: "#808080" }}>
-            {props.address}
+            {props.Address}
           </Typography>
         </Box>
         <StarIcon style={{ color: "#13BD7E" }} onClick={starHandler} />

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ProfileType } from "../../pages/Mypage";
 import { createStyle } from "../../lib/styleHelper";
 
-import axios from "axios";
+import axios from "../../lib/axios";
 
 const style = createStyle({
   contentContainer: {
@@ -19,11 +19,6 @@ const style = createStyle({
     columnGap: "1rem",
     alignContent: "center",
   },
-  inputWrapper: {
-    width: "30vw",
-    backgroundColor: "#F5FFFA",
-    borderColor: "#DBF5EC !important",
-  },
   input: {
     color: "#DBF5EC",
   },
@@ -36,8 +31,8 @@ const MyProfile: React.FC<ProfileType> = (props) => {
 
   useEffect(() => {
     if (props) {
-      setName(props.nickname);
-      setEmail(props.email);
+      setName("닉네임");
+      setEmail(props.Email);
     }
   }, []);
 
@@ -61,8 +56,10 @@ const MyProfile: React.FC<ProfileType> = (props) => {
     };
 
     axios.patch("/my/edit/", userData).then((res) => {
-      setVisible("");
+      alert("정보가 수정되었습니다.");
     });
+
+    setVisible("");
   };
 
   return (
@@ -82,7 +79,11 @@ const MyProfile: React.FC<ProfileType> = (props) => {
                   id="name"
                   type="text"
                   defaultValue={name}
-                  sx={style.sx.inputWrapper}
+                  sx={{
+                    width: "30vw",
+                    backgroundColor: "#FFF",
+                    borderColor: "#DBF5EC !important",
+                  }}
                   size="small"
                   onChange={(
                     event: React.ChangeEvent<
@@ -108,7 +109,11 @@ const MyProfile: React.FC<ProfileType> = (props) => {
                     type="text"
                     defaultValue={name}
                     disabled
-                    sx={style.sx.inputWrapper}
+                    sx={{
+                      width: "30vw",
+                      backgroundColor: "#F5FFFA",
+                      borderColor: "#DBF5EC !important",
+                    }}
                     size="small"
                   ></TextField>
                 </Box>
@@ -136,7 +141,11 @@ const MyProfile: React.FC<ProfileType> = (props) => {
                   id="name"
                   type="text"
                   defaultValue={email}
-                  sx={style.sx.inputWrapper}
+                  sx={{
+                    width: "30vw",
+                    backgroundColor: "#FFF",
+                    borderColor: "#DBF5EC !important",
+                  }}
                   size="small"
                   onChange={(
                     event: React.ChangeEvent<
@@ -162,7 +171,11 @@ const MyProfile: React.FC<ProfileType> = (props) => {
                     type="email"
                     defaultValue={email}
                     disabled
-                    sx={style.sx.inputWrapper}
+                    sx={{
+                      width: "30vw",
+                      backgroundColor: "#F5FFFA",
+                      borderColor: "#DBF5EC !important",
+                    }}
                     size="small"
                   ></TextField>
                 </Box>

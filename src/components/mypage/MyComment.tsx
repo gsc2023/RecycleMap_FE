@@ -11,7 +11,11 @@ const MyComment: React.FC<CommentList> = ({ list }) => {
   return (
     <React.Fragment>
       {list.map((item: CommentType) => (
-        <MyCommentComponent name={item.name} content={item.content} />
+        <MyCommentComponent
+          ID={item.ID}
+          Name={item.Name}
+          Content={item.Content}
+        />
       ))}
     </React.Fragment>
   );
