@@ -15,9 +15,9 @@ const MyBookmark: React.FC<BookmarkList> = ({ list }) => {
         <Grid item xs={6}>
           <Box style={{ padding: "1.5rem" }}>
             <MyBookmarkComponent
-              name={item.name}
-              address={item.address}
-              locationType={item.locationType}
+              Name={item.Name}
+              Address={item.Address}
+              LocationType={item.LocationType}
             />
           </Box>
         </Grid>

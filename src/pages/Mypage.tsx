@@ -4,7 +4,8 @@ import MyBookmark from "../components/mypage/MyBookmark";
 import MyComment from "../components/mypage/MyComment";
 import MyReport from "../components/mypage/MyReport";
 
-import axios from "axios";
+import axios from "../lib/axios";
+import useStore from "../store/auth";
 
 import { Box, Paper, Typography } from "@mui/material";
 import { createStyle } from "../lib/styleHelper";
@@ -32,118 +33,127 @@ const style = createStyle({
 });
 
 export type ProfileType = {
-  nickname: string;
-
-  email: string;
+  Nickname: string;
+  Email: string;
 };
 
 export type ReportType = {
-  name: String;
-  locationType: Number;
-  address: String;
-  content: String;
-  likes: String;
+  ID: String;
+  Name: String;
+  LocationType: Number;
+  Address: String;
+  Content: String;
+  Likes: String;
 };
 
 export type BookmarkType = {
-  name: String;
-  address: String;
-  locationType: Number;
+  Name: String;
+  Address: String;
+  LocationType: Number;
 };
 
 export type CommentType = {
-  name: String;
-  content: String;
+  ID: String;
+  Name: String;
+  Content: String;
 };
 
 const Mypage: React.FC = () => {
-  // const [profileData, setProfileData] = useState<ProfileType>();
+  const [profileData, setProfileData] = useState<ProfileType>();
   // const [bookmarkData, setBookmarkData] = useState<BookmarkType[]>([]);
   // const [reportData, setReportData] = useState<ReportType[]>([]);
   // const [commentData, setCommentData] = useState<CommentType[]>([]);
 
-  // useEffect(() => {
-  //   axios
-  //     .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/")
-  //     .then((res) => {
-  //       setProfileData(res.data);
-  //     });
+  useEffect(() => {
+    axios
+      .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/")
+      .then((res) => {
+        console.log(res.data.User);
+        setProfileData(res.data.User);
+      });
 
-  //   axios
-  //     .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/bookmark")
-  //     .then((res) => {
-  //       setBookmarkData(res.data);
-  //     });
+    // axios
+    //   .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/bookmark")
+    //   .then((res) => {
+    //     setBookmarkData(res.data);
+    //   });
 
-  //   axios
-  //     .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/report/")
-  //     .then((res) => {
-  //       setReportData(res.data);
-  //     });
+    // axios
+    //   .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/report/")
+    //   .then((res) => {
+    //     setReportData(res.data);
+    //   });
 
-  //   axios
-  //     .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/comment")
-  //     .then((res) => {
-  //       setCommentData(res.data);
-  //     });
-  // }, []);
+    // axios
+    //   .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/comment")
+    //   .then((res) => {
+    //     setCommentData(res.data);
+    //   });
+  }, []);
 
-  const profileData = {
-    nickname: "닉네임",
-    email: "example@example.com",
-    password: "password",
-  };
+  // const profileData = {
+  //   nickname: "닉네임",
+  //   email: "example@example.com",
+  //   password: "password",
+  // };
 
   const bookmarkData: BookmarkType[] = [
     {
-      name: "아름다운가게 양재점",
-      address: "서울 강남구 남부순환로351길 34",
-      locationType: 2,
+      Name: "아름다운가게 양재점",
+      Address: "서울 강남구 남부순환로351길 34",
+      LocationType: 2,
     },
     {
-      name: "아름다운가게 양재점",
-      address: "서울 강남구 남부순환로351길 34",
-      locationType: 2,
+      Name: "아름다운가게 양재점",
+      Address: "서울 강남구 남부순환로351길 34",
+      LocationType: 2,
     },
   ];
 
   const commentData: CommentType[] = [
     {
-      name: "아름다운가게 양재점",
-      content: "가게가 쾌적하고 친절하게 대해주셨어요.",
+      ID: "1",
+      Name: "아름다운가게 양재점",
+      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
     },
     {
-      name: "아름다운가게 양재점",
-      content: "가게가 쾌적하고 친절하게 대해주셨어요.",
+      ID: "2",
+      Name: "아름다운가게 양재점",
+      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
     },
     {
-      name: "아름다운가게 양재점",
-      content: "가게가 쾌적하고 친절하게 대해주셨어요.",
+      ID: "3",
+      Name: "아름다운가게 양재점",
+      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
     },
     {
-      name: "아름다운가게 양재점",
-      content: "가게가 쾌적하고 친절하게 대해주셨어요.",
+      ID: "4",
+      Name: "아름다운가게 양재점",
+      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
     },
     {
-      name: "아름다운가게 양재점",
-      content: "가게가 쾌적하고 친절하게 대해주셨어요.",
+      ID: "5",
+      Name: "아름다운가게 양재점",
+      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
     },
   ];
 
   const reportData: ReportType[] = [
     {
-      name: "아름다운가게 양재점",
-      locationType: 2,
-      address: "서울 강남구 남부순환로351길 34",
-      content: "제보 내용입니다.",
-      likes: "100",
+      ID: "1",
+      Name: "아름다운가게 양재점",
+      LocationType: 2,
+      Address: "서울 강남구 남부순환로351길 34",
+      Content: "제보 내용입니다.",
+      Likes: "100",
     },
     {
-      name: "아름다운가게 양재점",
-      locationType: 2,
-      address: "서울 강남구 남부순환로351길 34",
-      content: "제보 내용입니다.",
-      likes: "100",
+      ID: "2",
+      Name: "아름다운가게 양재점",
+      LocationType: 2,
+      Address: "서울 강남구 남부순환로351길 34",
+      Content: "제보 내용입니다.",
+      Likes: "100",
     },
   ];
 
@@ -161,8 +171,8 @@ const Mypage: React.FC = () => {
                 프로필 수정
               </Typography>
               <MyProfile
-                nickname={profileData.nickname}
-                email={profileData.email}
+                Nickname={profileData.Nickname}
+                Email={profileData.Email}
               />
             </Paper>
             <Paper sx={style.sx.paperContainer}>

@@ -24,11 +24,12 @@ const MyReport: React.FC<ReportList> = ({ list }) => {
     <Box sx={style.sx.componentContainer}>
       {list.map((item: ReportType) => (
         <MyReportComponent
-          name={item.name}
-          address={item.address}
-          locationType={item.locationType}
-          content={item.content}
-          likes={item.likes}
+          ID={item.ID}
+          Name={item.Name}
+          Address={item.Address}
+          LocationType={item.LocationType}
+          Content={item.Content}
+          Likes={item.Likes}
         />
       ))}
     </Box>
