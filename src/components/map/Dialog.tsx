@@ -8,16 +8,16 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useBookmarkStore } from '../../store';
 
-const placeType = ['', '의류 수거함', '폐건전지/현광등', '아름다운가게', '재활용품판매;'];
+const placeType = ['', '의류 수거함', '폐건전지/현광등', '아름다운가게', '재활용품판매'];
 
 const MapDialog: React.FC = () => {
-  const { toggleBookMark } = useBookmarkStore();
+  const { toggleBookMark, bookmarks } = useBookmarkStore();
   const [sltPlace, setSltPlace] = useState<PlaceInfo | null>(null);
 
   const mapInstance = MapManager.getInstance();
 
   const handleStarClick = useCallback((id: string) => {
-    axios.post('/bookmarks/', {
+    axios.post(`/bookmarks/${id}`, {
       LocationID: id,
     }).then(() => {
       toggleBookMark(id);
@@ -46,8 +46,8 @@ const MapDialog: React.FC = () => {
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ width: '47%', height: '400px' }}>
-            {sltPlace.placeImg ? (
-              <img style={{ objectFit: 'contain' }} src={sltPlace.placeImg} alt="" />
+            {sltPlace.ImagePath ? (
+              <img style={{ objectFit: 'contain', width: '100%', height: '100%' }} src={sltPlace.ImagePath} alt="" />
             ) : (
               <Box
                 sx={{
@@ -68,10 +68,10 @@ const MapDialog: React.FC = () => {
               <Chip label={placeType[sltPlace.LocationType]} color="primary" sx={{ color: '#fff' }} />
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography component="h1" sx={{ fontWeight: 'bold', fontSize: '32px' }}>
-                  {sltPlace.Content}
+                  {sltPlace.Name}
                 </Typography>
                 <IconButton onClick={() => handleStarClick(sltPlace.id)}>
-                  {true ? (
+                  {bookmarks.includes(sltPlace.id) ? (
                     <StarIcon sx={{ color: '#13BD7E', fontSize: '32px' }} />
                   ) : (
                     <StarBorderIcon sx={{ color: '#13BD7E', fontSize: '32px' }} />
@@ -79,7 +79,7 @@ const MapDialog: React.FC = () => {
                 </IconButton>
               </Box>
               <Typography>
-                주소주소주소주소주소주소
+                {sltPlace.Address}
               </Typography>
             </Box>
             <Box sx={{ borderRadius: '15px', background: '#F5FFFA', padding: '25px', flex: '1 0', border: '1px solid #DBF5EC' }}>

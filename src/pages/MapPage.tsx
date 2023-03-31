@@ -150,7 +150,7 @@ const MapPage: React.FC = () => {
         inputRef={inputRef}
         sx={{
           position: 'fixed',
-          left: '5%',
+          left: 'calc(5% + 100px)',
           top: '5%',
           background: '#fff',
           width: '30%',

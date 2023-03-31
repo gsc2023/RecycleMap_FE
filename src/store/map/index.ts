@@ -1,4 +1,5 @@
 import { GoogleMap } from '@googlemaps/map-loader';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import axios from '../../lib/axios';
 import {
   EventPayload,
@@ -8,7 +9,8 @@ import {
   PlaceType,
 } from './type';
 
-const placeType = ['', '의류 수거함', '폐건전지/현광등', '아름다운가게', '재활용품판매;'];
+const storage = getStorage();
+const placeType = ['', '의류 수거함', '폐건전지/현광등', '아름다운가게', '재활용품판매'];
 
 const LAT_LNG_AJOU = {
   lat: 37.5639635,
@@ -167,16 +169,31 @@ class MapManager {
           3: this.placeLst.shop,
           4: this.placeLst.recycle,
         };
-        resp.data.forEach((place: any) => {
+        const promises = resp.data.map(async (place: any) => {
           const {
-            ID,
-            Location,
+            Address,
+            LocationDto: {
+              ID,
+              Location,
+            },
           } = place;
           const fetchLst = mapper[Location.LocationType as (1 | 2 | 3 | 4)];
-          fetchLst.push({ id: ID, ...Location });
+          const { response: { result } } = Address;
+          const pinfo = { id: ID, ...Location };
+          if (Array.isArray(result)) {
+            pinfo.Address = result[0].text;
+          }
+          if (typeof Location.ImagePath === 'string' && Location.ImagePath !== '') {
+            const url = await getDownloadURL(ref(storage, Location.ImagePath));
+            pinfo.ImagePath = url;
+            console.log(url);
+          }
+          fetchLst.push(pinfo);
         });
-        this.queriedCoord = { lat, lng };
-        this.updatePlaceMarker();
+        Promise.all(promises).then(() => {
+          this.queriedCoord = { lat, lng };
+          this.updatePlaceMarker();
+        });
       }).finally(() => {
         this.apiLock = false;
       });

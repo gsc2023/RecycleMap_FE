@@ -11,6 +11,9 @@ import SendReport from "./pages/SendReport";
 import axios from "./lib/axios";
 import { useBookmarkStore } from "./store";
 import Mypage from "./pages/Mypage";
+import LDrawer from "./pages/LDrawer";
+import { Box } from "@mui/material";
+import Detector from "./pages/Detector";
 // import { globalStyles } from "./styles/global.styles";
 
 const App: React.FC = () => {
@@ -19,10 +22,7 @@ const App: React.FC = () => {
   useEffect(() => {
     axios
       .get("/bookmarks/")
-      .then((r) => initBookMarks(r.data))
-      .catch(() => {
-        console.log("server not yet");
-      });
+      .then((r) => initBookMarks(r.data.map((i: any) => i.ID)));
   }, [initBookMarks]);
 
   return (
@@ -36,6 +36,7 @@ const App: React.FC = () => {
         <Route path="/report" element={<ReportList />}></Route>
         <Route path="/report/send" element={<SendReport />} />
         <Route path="/mypage" element={<Mypage />} />
+        <Route path="/detect" element={<Detector />} />
       </Routes>
     </BrowserRouter>
   );
