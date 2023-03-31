@@ -4,6 +4,8 @@ import MyBookmarkComponent from "./MyBookmarkComponent";
 import { BookmarkType } from "../../pages/Mypage";
 import { Grid, Box } from "@mui/material";
 
+import { useEffect } from "react";
+
 type BookmarkProps = {
   list: BookmarkType[];
   onDelete: Function;
