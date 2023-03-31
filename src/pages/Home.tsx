@@ -94,6 +94,9 @@ const Home: React.FC = () => {
                   backgroundColor: "#F5FFFA",
                   border: "1px solid #DBF5EC",
                 }}
+                onClick={() => {
+                  navigate("/map");
+                }}
               >
                 재활용 지도
               </Paper>
@@ -101,16 +104,44 @@ const Home: React.FC = () => {
           </Grid>
           <Grid container xs={12} sm={7} lg={6} spacing={2}>
             <Grid item lg={6}>
-              <Paper sx={style.sx.contentContainer}>제보하기</Paper>
+              <Paper
+                sx={style.sx.contentContainer}
+                onClick={() => {
+                  navigate("/report/send");
+                }}
+              >
+                제보하기
+              </Paper>
             </Grid>
             <Grid item lg={6}>
-              <Paper sx={style.sx.contentContainer}>분류 정보</Paper>
+              <Paper
+                sx={style.sx.contentContainer}
+                onClick={() => {
+                  navigate("/camera");
+                }}
+              >
+                분류 정보
+              </Paper>
             </Grid>
             <Grid item lg={6}>
-              <Paper sx={style.sx.contentContainer}>오늘의 꿀팁</Paper>
+              <Paper
+                sx={style.sx.contentContainer}
+                onClick={() => {
+                  navigate("/info");
+                }}
+              >
+                오늘의 꿀팁
+              </Paper>
             </Grid>
             <Grid item lg={6}>
-              <Paper sx={style.sx.contentContainer}>마이 페이지</Paper>
+              <Paper
+                sx={style.sx.contentContainer}
+                onClick={() => {
+                  navigate("/mypage");
+                }}
+              >
+                마이 페이지
+              </Paper>
             </Grid>
           </Grid>
         </Grid>
