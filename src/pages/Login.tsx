@@ -29,7 +29,7 @@ const Login: React.FC = () => {
           email: user.email || '',
           accessToken,
         });
-        navigate('/map');
+        navigate('/');
       });
     });
   }, [state, login, navigate]);

@@ -92,9 +92,9 @@ const ReportList: React.FC = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, width: "80%", margin: "auto", fontFamily: "NanumGothic", fontStyle: "normal", fontWeight: 700 }}>
+    <Box sx={{ flexGrow: 1, width: "100%", margin: "auto", fontFamily: "NanumGothic", fontStyle: "normal", fontWeight: 700 }}>
       <Box>
-        <AppBar position="static" sx={{ borderRadius: '20px 20px 0px 0px' }}>
+        <AppBar position="static">
           <Toolbar>
             <Typography
               variant="h6"
@@ -107,6 +107,7 @@ const ReportList: React.FC = () => {
                 fontSize: '21px',
                 lineHeight: '21px',
                 color: '#FFFFFF',
+                ml: '50px',
               }}
             >
               게시물 목록
@@ -115,17 +116,11 @@ const ReportList: React.FC = () => {
         </AppBar>
 
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell align="center" sx={style.sx.tableHead}>
-                  번호
-                </TableCell>
-                <TableCell align="center" sx={style.sx.tableHead}>
                   제목
-                </TableCell>
-                <TableCell align="center" sx={style.sx.tableHead}>
-                  작성일
                 </TableCell>
                 <TableCell align="center" sx={style.sx.tableHead}>
                   작성자
@@ -144,11 +139,7 @@ const ReportList: React.FC = () => {
                     key={row.ID}
                   //sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                    <TableCell align="center" sx={{ width: 50 }}>
-                      {index + 1}
-                    </TableCell>
                     <TableCell align="center">{row.Report.Name}</TableCell>
-                    <TableCell align="center">{date.toLocaleString()}</TableCell>
                     <TableCell align="center">{row.User.DisplayName}</TableCell>
                     <TableCell align="center">{row.Report.Like}</TableCell>
                   </TableRow>

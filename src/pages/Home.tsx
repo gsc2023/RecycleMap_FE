@@ -16,6 +16,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import EmailIcon from "@mui/icons-material/Email";
 
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store";
 
 const style = createStyle({
   gridContainer: {
@@ -46,6 +47,7 @@ const style = createStyle({
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const { user: { login } } = useAuthStore();
 
   return (
     <Box>
@@ -56,7 +58,7 @@ const Home: React.FC = () => {
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography>🗺️ Recycle Map</Typography>
-          <Box sx={{ display: "flex", columnGap: "0.5vw" }}>
+          {login === false && <Box sx={{ display: "flex", columnGap: "0.5vw" }}>
             <Chip
               label="로그인"
               onClick={() => {
@@ -69,7 +71,7 @@ const Home: React.FC = () => {
                 navigate("/auth/signup");
               }}
             ></Chip>
-          </Box>
+          </Box>}
         </Toolbar>
         <Box sx={{ padding: "0 24px" }}>
           <Box
