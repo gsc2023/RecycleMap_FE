@@ -46,8 +46,8 @@ const MapDialog: React.FC = () => {
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ width: '47%', height: '400px' }}>
-            {sltPlace.placeImg ? (
-              <img style={{ objectFit: 'contain' }} src={sltPlace.placeImg} alt="" />
+            {sltPlace.ImagePath ? (
+              <img style={{ objectFit: 'contain', width: '100%', height: '100%' }} src={sltPlace.ImagePath} alt="" />
             ) : (
               <Box
                 sx={{
@@ -68,7 +68,7 @@ const MapDialog: React.FC = () => {
               <Chip label={placeType[sltPlace.LocationType]} color="primary" sx={{ color: '#fff' }} />
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography component="h1" sx={{ fontWeight: 'bold', fontSize: '32px' }}>
-                  {sltPlace.Content}
+                  {sltPlace.Name}
                 </Typography>
                 <IconButton onClick={() => handleStarClick(sltPlace.id)}>
                   {bookmarks.includes(sltPlace.id) ? (
@@ -79,7 +79,7 @@ const MapDialog: React.FC = () => {
                 </IconButton>
               </Box>
               <Typography>
-                주소주소주소주소주소주소
+                {sltPlace.Address}
               </Typography>
             </Box>
             <Box sx={{ borderRadius: '15px', background: '#F5FFFA', padding: '25px', flex: '1 0', border: '1px solid #DBF5EC' }}>

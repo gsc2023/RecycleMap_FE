@@ -22,8 +22,17 @@ const SendReport: React.FC = () => {
   const handleChangeNowLoc = useCallback((pos: google.maps.LatLngLiteral) => {
     setNowLoc(pos);
     console.log(`${pos.lat},${pos.lng}`);
-    axios.post('https://www.guithin.com/getLoc', pos)
-      .then(res => setAddr(res.data));
+    axios.get('/reports/address', {
+      params: {
+        Latitude: pos.lat,
+        Longitude: pos.lng,
+      }
+    }).then(res => {
+      const { response: { result } } = res.data;
+      if (Array.isArray(result)) {
+        setAddr(result[0].text);
+      }
+    });
   }, []);
 
   useEffect(() => {
