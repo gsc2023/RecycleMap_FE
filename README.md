@@ -4,6 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Required environment variables
 The env file must be named '.env' and located in the root directory of this project.
+
 `REACT_APP_GOOGLE_MAPS_API_KEY`
 
 This value is the api key issued by https://developers.google.com/maps
