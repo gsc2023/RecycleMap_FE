@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
 import MapPage from "./pages/MapPage";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -27,6 +28,7 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/auth/signin" element={<Login />} />
