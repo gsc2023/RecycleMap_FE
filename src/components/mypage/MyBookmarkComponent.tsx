@@ -30,7 +30,15 @@ const style = createStyle({
   },
 });
 
-const MyBookmarkComponent: React.FC<BookmarkType> = (props) => {
+type BookmarkComponentProps = {
+  props: BookmarkType;
+  onDelete: Function;
+};
+
+const MyBookmarkComponent: React.FC<BookmarkComponentProps> = ({
+  props,
+  onDelete,
+}) => {
   const [type, setType] = useState<String>("");
 
   useEffect(() => {
@@ -52,7 +60,9 @@ const MyBookmarkComponent: React.FC<BookmarkType> = (props) => {
     }
   }, []);
 
-  const starHandler = () => {};
+  const deleteHandler = () => {
+    onDelete(props.LocationID);
+  };
 
   return (
     <Box sx={style.sx.componentContainer}>
@@ -70,7 +80,7 @@ const MyBookmarkComponent: React.FC<BookmarkType> = (props) => {
             {props.Address}
           </Typography>
         </Box>
-        <StarIcon style={{ color: "#13BD7E" }} onClick={starHandler} />
+        <StarIcon style={{ color: "#13BD7E" }} onClick={deleteHandler} />
       </Box>
     </Box>
   );

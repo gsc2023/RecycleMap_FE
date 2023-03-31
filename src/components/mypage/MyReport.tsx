@@ -15,22 +15,16 @@ const style = createStyle({
   },
 });
 
-type ReportList = {
+type MyReportProps = {
   list: ReportType[];
+  onDelete: Function;
 };
 
-const MyReport: React.FC<ReportList> = ({ list }) => {
+const MyReport: React.FC<MyReportProps> = ({ list, onDelete }) => {
   return (
     <Box sx={style.sx.componentContainer}>
       {list.map((item: ReportType) => (
-        <MyReportComponent
-          ID={item.ID}
-          Name={item.Name}
-          Address={item.Address}
-          LocationType={item.LocationType}
-          Content={item.Content}
-          Likes={item.Likes}
-        />
+        <MyReportComponent props={item} onDelete={onDelete} />
       ))}
     </Box>
   );

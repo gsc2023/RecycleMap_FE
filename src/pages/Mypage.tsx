@@ -47,6 +47,7 @@ export type ReportType = {
 };
 
 export type BookmarkType = {
+  LocationID: String;
   Name: String;
   Address: String;
   LocationType: Number;
@@ -61,11 +62,13 @@ export type CommentType = {
 const Mypage: React.FC = () => {
   const bookmarkData_sample: BookmarkType[] = [
     {
+      LocationID: "1",
       Name: "아름다운가게 양재점",
       Address: "서울 강남구 남부순환로351길 34",
       LocationType: 2,
     },
     {
+      LocationID: "2",
       Name: "아름다운가게 양재점",
       Address: "서울 강남구 남부순환로351길 34",
       LocationType: 2,
@@ -153,8 +156,26 @@ const Mypage: React.FC = () => {
     //   });
   }, []);
 
+  const reportDeleteHandler = (reportId: String) => {
+    axios.delete(`/my/report/${reportId}`).then(() => {
+      const newReportData = reportData.filter(
+        (report) => report.ID !== reportId
+      );
+      setReportData(newReportData);
+    });
+  };
+
+  const bookmarkDeleteHandler = (locationId: String) => {
+    axios.delete(`/bookmarks/${locationId}`).then(() => {
+      const newBookmarkData = bookmarkData.filter(
+        (bookmark) => bookmark.LocationID !== locationId
+      );
+      setBookmarkData(newBookmarkData);
+    });
+  };
+
   const commentDeleteHandler = (commentId: String) => {
-    axios.delete(`/comment/${commentId}`).then(() => {
+    axios.delete(`/my/comment/${commentId}`).then(() => {
       const newCommentData = commentData.filter(
         (comment) => comment.ID !== commentId
       );
@@ -188,7 +209,7 @@ const Mypage: React.FC = () => {
               >
                 나의 제보 관리
               </Typography>
-              <MyReport list={reportData} />
+              <MyReport list={reportData} onDelete={commentDeleteHandler} />
             </Paper>
             <Paper sx={style.sx.paperContainer}>
               <Typography
@@ -208,7 +229,7 @@ const Mypage: React.FC = () => {
               >
                 즐겨찾기
               </Typography>
-              <MyBookmark list={bookmarkData} />
+              <MyBookmark list={bookmarkData} onDelete={commentDeleteHandler} />
             </Paper>
           </Box>
         </React.Fragment>
