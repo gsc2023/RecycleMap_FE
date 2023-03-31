@@ -3,9 +3,15 @@ import { CommentType } from "../../pages/Mypage";
 import { createStyle } from "../../lib/styleHelper";
 import { Box, Typography, Button } from "@mui/material";
 
-import axios from "../../lib/axios";
+type CommentComponentProps = {
+  props: CommentType;
+  onDelete: Function;
+};
 
-const MyCommentComponent: React.FC<CommentType> = (props) => {
+const MyCommentComponent: React.FC<CommentComponentProps> = ({
+  props,
+  onDelete,
+}) => {
   const style = createStyle({
     componentContainer: {
       display: "flex",
@@ -23,7 +29,7 @@ const MyCommentComponent: React.FC<CommentType> = (props) => {
 
   const deleteHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    axios.delete(`/comments/${props.ID}`).then((res) => {});
+    onDelete(props.ID);
   };
 
   return (

@@ -3,19 +3,16 @@ import MyCommentComponent from "./MyCommentComponent";
 
 import { CommentType } from "../../pages/Mypage";
 
-type CommentList = {
+type MyCommentProps = {
   list: CommentType[];
+  onDelete: Function;
 };
 
-const MyComment: React.FC<CommentList> = ({ list }) => {
+const MyComment: React.FC<MyCommentProps> = ({ list, onDelete }) => {
   return (
     <React.Fragment>
       {list.map((item: CommentType) => (
-        <MyCommentComponent
-          ID={item.ID}
-          Name={item.Name}
-          Content={item.Content}
-        />
+        <MyCommentComponent props={item} onDelete={onDelete} />
       ))}
     </React.Fragment>
   );
