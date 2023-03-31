@@ -38,7 +38,15 @@ const style = createStyle({
   },
 });
 
-const MyReportComponent: React.FC<ReportType> = (props) => {
+type ReportComponentProps = {
+  props: ReportType;
+  onDelete: Function;
+};
+
+const MyReportComponent: React.FC<ReportComponentProps> = ({
+  props,
+  onDelete,
+}) => {
   const [type, setType] = useState<String>("");
   const [content, setContent] = useState<String>("");
   const [visible, setVisible] = useState<Boolean>(false);
@@ -71,7 +79,7 @@ const MyReportComponent: React.FC<ReportType> = (props) => {
 
   const deleteHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    axios.delete(`/report/${props.ID}`).then((res) => {});
+    onDelete(props.ID);
   };
 
   const saveHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
