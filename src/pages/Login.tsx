@@ -35,8 +35,8 @@ const Login: React.FC = () => {
   }, [state, login, navigate]);
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 }}}>
+    <Container component="main" maxWidth="xs" sx={{ pt: '100px' }}>
+      <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 }}}>
         <Typography variant="h6" align="center">로그인</Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField 

@@ -22,10 +22,12 @@ const style = createStyle({
   },
   selectTop: {
     position: 'fixed',
-    right: '1.5%',
-    top: '4%',
+    // right: '1.5%',
+    // top: '15%',
+    bottom: '20px',
+    right: '90px',
     background: 'white',
-    height: '50%',
+    // height: '50%',
     display: 'flex',
     justifyContent: 'space-between'
   },
@@ -35,7 +37,7 @@ const style = createStyle({
   },
   selectBox: {
     padding: '0 20px',
-    height: '25%',
+    // height: '25%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -48,7 +50,7 @@ const style = createStyle({
   sliderLoc: {
     position: 'fixed',
     bottom: '20px',
-    right: '40px',
+    right: '10px',
     display: 'flex',
     alignItems: 'center',
   },
@@ -150,10 +152,10 @@ const MapPage: React.FC = () => {
         inputRef={inputRef}
         sx={{
           position: 'fixed',
-          left: 'calc(5% + 100px)',
+          // left: 'calc(5% + 100px)',
           top: '5%',
           background: '#fff',
-          width: '30%',
+          width: '80%',
         }}
         size="small"
         InputProps={{
@@ -167,7 +169,7 @@ const MapPage: React.FC = () => {
       />
       <ToggleButtonGroup
         sx={style.sx.selectTop}
-        orientation="vertical"
+        // orientation="vertical"
         value={sltd}
         onChange={(a, newV) => {
           setSltd(newV);
@@ -180,14 +182,12 @@ const MapPage: React.FC = () => {
               sx={{
                 color: sltd.includes(id) ? 'primary.main' : 'primary.dark',
                 width: '100%',
-                height: '50%',
+                // height: '50%',
                 display: 'flex',
                 alignItems: 'center',
               }}>
               {icon}
             </Box>
-            <Box sx={{ my: 0.5 }} />
-            {text}
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
@@ -200,7 +200,7 @@ const MapPage: React.FC = () => {
             }
           </IconButton>
         </Paper>
-        <Paper sx={{ px: 3, py: 1, borderRadius: '15px' }}>
+        {/* <Paper sx={{ px: 3, py: 1, borderRadius: '15px' }}>
           <Slider
             sx={style.sx.slider}
             value={zoom}
@@ -210,7 +210,7 @@ const MapPage: React.FC = () => {
             onChange={(_, v) => handleChangeZoom(v as number)}
             track="inverted"
           />
-        </Paper>
+        </Paper> */}
       </Box>
       {loading && (
         <Box

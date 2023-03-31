@@ -15,7 +15,7 @@ interface NavigateInfo {
 
 const lst: NavigateInfo[] = [{
   icon: <HomeIcon sx={{ fontSize: '32px' }} />,
-  path: '/home',
+  path: '/',
   text: '홈'
 }, {
   icon: <MapIcon sx={{ fontSize: '32px' }} />,
@@ -35,20 +35,33 @@ const lst: NavigateInfo[] = [{
   text: '내 정보',
 }];
 
-const LDrawer: React.FC = () => {
+interface Props {
+  open: boolean;
+  onClose: () => unknown;
+}
+
+const LDrawer: React.FC<Props> = ({ open, onClose }) => {
   const navigate = useNavigate();
   return (
     <Drawer
       sx={{
+        zIndex: 1001,
         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 100 },
       }}
-      open={true}
-      variant="permanent"
+      open={open}
+      onClose={() => onClose()}
+      // variant="permanent"
     >
       <List>
         {lst.map((item) => (
           <ListItem key={item.path} disablePadding>
-            <ListItemButton onClick={() => navigate(item.path)} sx={{ flexDirection: 'column' }}>
+            <ListItemButton
+              onClick={() => {
+                navigate(item.path);
+                onClose();
+              }}
+              sx={{ flexDirection: 'column' }}
+            >
               <ListItemIcon sx={{ minWidth: 0 }}>
                 {item.icon}
               </ListItemIcon>

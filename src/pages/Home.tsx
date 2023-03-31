@@ -52,7 +52,7 @@ const Home: React.FC = () => {
       <AppBar
         position="static"
         elevation={0}
-        sx={{ background: "#FFF", height: "8vh" }}
+        sx={{ background: "#FFF", height: "8vh", ml: '50px', width: 'calc(100% - 50px)' }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography>🗺️ Recycle Map</Typography>
