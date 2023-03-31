@@ -59,10 +59,72 @@ export type CommentType = {
 };
 
 const Mypage: React.FC = () => {
+  const bookmarkData_sample: BookmarkType[] = [
+    {
+      Name: "아름다운가게 양재점",
+      Address: "서울 강남구 남부순환로351길 34",
+      LocationType: 2,
+    },
+    {
+      Name: "아름다운가게 양재점",
+      Address: "서울 강남구 남부순환로351길 34",
+      LocationType: 2,
+    },
+  ];
+
+  const commentData_sample: CommentType[] = [
+    {
+      ID: "1",
+      Name: "아름다운가게 양재점",
+      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
+    },
+    {
+      ID: "2",
+      Name: "아름다운가게 양재점",
+      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
+    },
+    {
+      ID: "3",
+      Name: "아름다운가게 양재점",
+      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
+    },
+    {
+      ID: "4",
+      Name: "아름다운가게 양재점",
+      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
+    },
+    {
+      ID: "5",
+      Name: "아름다운가게 양재점",
+      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
+    },
+  ];
+
+  const reportData_sample: ReportType[] = [
+    {
+      ID: "1",
+      Name: "아름다운가게 양재점",
+      LocationType: 2,
+      Address: "서울 강남구 남부순환로351길 34",
+      Content: "제보 내용입니다.",
+      Likes: "100",
+    },
+    {
+      ID: "2",
+      Name: "아름다운가게 양재점",
+      LocationType: 2,
+      Address: "서울 강남구 남부순환로351길 34",
+      Content: "제보 내용입니다.",
+      Likes: "100",
+    },
+  ];
+
   const [profileData, setProfileData] = useState<ProfileType>();
-  // const [bookmarkData, setBookmarkData] = useState<BookmarkType[]>([]);
-  // const [reportData, setReportData] = useState<ReportType[]>([]);
-  // const [commentData, setCommentData] = useState<CommentType[]>([]);
+  const [bookmarkData, setBookmarkData] =
+    useState<BookmarkType[]>(bookmarkData_sample);
+  const [reportData, setReportData] = useState<ReportType[]>(reportData_sample);
+  const [commentData, setCommentData] =
+    useState<CommentType[]>(commentData_sample);
 
   useEffect(() => {
     axios
@@ -91,71 +153,14 @@ const Mypage: React.FC = () => {
     //   });
   }, []);
 
-  // const profileData = {
-  //   nickname: "닉네임",
-  //   email: "example@example.com",
-  //   password: "password",
-  // };
-
-  const bookmarkData: BookmarkType[] = [
-    {
-      Name: "아름다운가게 양재점",
-      Address: "서울 강남구 남부순환로351길 34",
-      LocationType: 2,
-    },
-    {
-      Name: "아름다운가게 양재점",
-      Address: "서울 강남구 남부순환로351길 34",
-      LocationType: 2,
-    },
-  ];
-
-  const commentData: CommentType[] = [
-    {
-      ID: "1",
-      Name: "아름다운가게 양재점",
-      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      ID: "2",
-      Name: "아름다운가게 양재점",
-      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      ID: "3",
-      Name: "아름다운가게 양재점",
-      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      ID: "4",
-      Name: "아름다운가게 양재점",
-      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      ID: "5",
-      Name: "아름다운가게 양재점",
-      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-  ];
-
-  const reportData: ReportType[] = [
-    {
-      ID: "1",
-      Name: "아름다운가게 양재점",
-      LocationType: 2,
-      Address: "서울 강남구 남부순환로351길 34",
-      Content: "제보 내용입니다.",
-      Likes: "100",
-    },
-    {
-      ID: "2",
-      Name: "아름다운가게 양재점",
-      LocationType: 2,
-      Address: "서울 강남구 남부순환로351길 34",
-      Content: "제보 내용입니다.",
-      Likes: "100",
-    },
-  ];
+  const commentDeleteHandler = (commentId: String) => {
+    axios.delete(`/comment/${commentId}`).then(() => {
+      const newCommentData = commentData.filter(
+        (comment) => comment.ID !== commentId
+      );
+      setCommentData(newCommentData);
+    });
+  };
 
   return (
     <React.Fragment>
@@ -193,7 +198,7 @@ const Mypage: React.FC = () => {
               >
                 나의 댓글 관리
               </Typography>
-              <MyComment list={commentData} />
+              <MyComment list={commentData} onDelete={commentDeleteHandler} />
             </Paper>
             <Paper sx={style.sx.paperContainer}>
               <Typography
