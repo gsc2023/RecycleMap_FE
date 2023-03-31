@@ -39,18 +39,23 @@ export type ProfileType = {
 
 export type ReportType = {
   ID: String;
-  Name: String;
-  LocationType: Number;
-  Address: String;
-  Content: String;
-  Likes: String;
+  Report: {
+    ID: String;
+    Name: String;
+    LocationType: Number;
+    Latitude: Number;
+    Longitude: Number;
+    Content: String;
+    Likes: String;
+  };
 };
 
 export type BookmarkType = {
-  LocationID: String;
-  Name: String;
-  Address: String;
-  LocationType: Number;
+  ID: String;
+  Bookmark: {
+    UID: String;
+    LocationID: String;
+  };
 };
 
 export type CommentType = {
@@ -60,74 +65,10 @@ export type CommentType = {
 };
 
 const Mypage: React.FC = () => {
-  const bookmarkData_sample: BookmarkType[] = [
-    {
-      LocationID: "1",
-      Name: "아름다운가게 양재점",
-      Address: "서울 강남구 남부순환로351길 34",
-      LocationType: 2,
-    },
-    {
-      LocationID: "2",
-      Name: "아름다운가게 양재점",
-      Address: "서울 강남구 남부순환로351길 34",
-      LocationType: 2,
-    },
-  ];
-
-  const commentData_sample: CommentType[] = [
-    {
-      ID: "1",
-      Name: "아름다운가게 양재점",
-      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      ID: "2",
-      Name: "아름다운가게 양재점",
-      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      ID: "3",
-      Name: "아름다운가게 양재점",
-      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      ID: "4",
-      Name: "아름다운가게 양재점",
-      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-    {
-      ID: "5",
-      Name: "아름다운가게 양재점",
-      Content: "가게가 쾌적하고 친절하게 대해주셨어요.",
-    },
-  ];
-
-  const reportData_sample: ReportType[] = [
-    {
-      ID: "1",
-      Name: "아름다운가게 양재점",
-      LocationType: 2,
-      Address: "서울 강남구 남부순환로351길 34",
-      Content: "제보 내용입니다.",
-      Likes: "100",
-    },
-    {
-      ID: "2",
-      Name: "아름다운가게 양재점",
-      LocationType: 2,
-      Address: "서울 강남구 남부순환로351길 34",
-      Content: "제보 내용입니다.",
-      Likes: "100",
-    },
-  ];
-
   const [profileData, setProfileData] = useState<ProfileType>();
-  const [bookmarkData, setBookmarkData] =
-    useState<BookmarkType[]>(bookmarkData_sample);
-  const [reportData, setReportData] = useState<ReportType[]>(reportData_sample);
-  const [commentData, setCommentData] =
-    useState<CommentType[]>(commentData_sample);
+  const [bookmarkData, setBookmarkData] = useState<BookmarkType[]>([]);
+  const [reportData, setReportData] = useState<ReportType[]>([]);
+  const [commentData, setCommentData] = useState<CommentType[]>([]);
 
   useEffect(() => {
     axios
@@ -135,23 +76,27 @@ const Mypage: React.FC = () => {
       .then((res) => {
         console.log(res.data.User);
         setProfileData(res.data.User);
+      })
+      .catch((err) => {
+        console.log(err);
       });
 
-    // axios
-    //   .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/bookmark")
-    //   .then((res) => {
-    //     setBookmarkData(res.data);
-    //   });
+    axios
+      .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/bookmark")
+      .then((res) => {
+        setBookmarkData(res.data);
+      });
 
-    // axios
-    //   .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/report/")
-    //   .then((res) => {
-    //     setReportData(res.data);
-    //   });
+    axios
+      .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/report")
+      .then((res) => {
+        setReportData(res.data);
+      });
 
     // axios
     //   .get("https://vscode-qjnbi.run.goorm.site/proxy/8080/my/comment")
     //   .then((res) => {
+    //     console.log(res.data);
     //     setCommentData(res.data);
     //   });
   }, []);
@@ -165,10 +110,10 @@ const Mypage: React.FC = () => {
     });
   };
 
-  const bookmarkDeleteHandler = (locationId: String) => {
-    axios.delete(`/bookmarks/${locationId}`).then(() => {
+  const bookmarkDeleteHandler = (bookmarkId: String) => {
+    axios.post(`/bookmarks/${bookmarkId}`).then(() => {
       const newBookmarkData = bookmarkData.filter(
-        (bookmark) => bookmark.LocationID !== locationId
+        (bookmark) => bookmark.ID !== bookmarkId
       );
       setBookmarkData(newBookmarkData);
     });
@@ -209,9 +154,9 @@ const Mypage: React.FC = () => {
               >
                 나의 제보 관리
               </Typography>
-              <MyReport list={reportData} onDelete={commentDeleteHandler} />
+              <MyReport list={reportData} onDelete={reportDeleteHandler} />
             </Paper>
-            <Paper sx={style.sx.paperContainer}>
+            {/* <Paper sx={style.sx.paperContainer}>
               <Typography
                 variant="subtitle1"
                 component="h6"
@@ -220,7 +165,7 @@ const Mypage: React.FC = () => {
                 나의 댓글 관리
               </Typography>
               <MyComment list={commentData} onDelete={commentDeleteHandler} />
-            </Paper>
+            </Paper> */}
             <Paper sx={style.sx.paperContainer}>
               <Typography
                 variant="subtitle1"
@@ -229,7 +174,10 @@ const Mypage: React.FC = () => {
               >
                 즐겨찾기
               </Typography>
-              <MyBookmark list={bookmarkData} onDelete={commentDeleteHandler} />
+              <MyBookmark
+                list={bookmarkData}
+                onDelete={bookmarkDeleteHandler}
+              />
             </Paper>
           </Box>
         </React.Fragment>

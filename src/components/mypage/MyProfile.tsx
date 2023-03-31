@@ -34,7 +34,7 @@ const MyProfile: React.FC<ProfileType> = (props) => {
       setName("닉네임");
       setEmail(props.Email);
     }
-  }, []);
+  }, [name]);
 
   const modifyHandler = (
     params: String,
@@ -55,7 +55,7 @@ const MyProfile: React.FC<ProfileType> = (props) => {
       DisplayName: name,
     };
 
-    axios.patch("/my/edit/", userData).then((res) => {
+    axios.patch("/my/edit", userData).then((res) => {
       alert("정보가 수정되었습니다.");
     });
 
